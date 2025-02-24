@@ -2,6 +2,7 @@ package itmo.blps.blps.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.Set;
 
 @Data
 @Entity
@@ -21,4 +22,10 @@ public class Course {
 
     @Column(name = "min_score")
     private Integer minimumScore;
+
+    @OneToMany(mappedBy = "course")
+    private Set<UserCourseRole> userRoles;
+
+    @OneToMany(mappedBy = "course")
+    private Set<Task> tasks;
 } 

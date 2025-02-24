@@ -2,6 +2,7 @@ package itmo.blps.blps.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,7 +18,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @OneToMany(mappedBy = "user")
+    private Set<UserCourseRole> courseRoles;
 }
