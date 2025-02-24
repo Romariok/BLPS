@@ -1,6 +1,8 @@
 package itmo.blps.blps.service;
 
 import itmo.blps.blps.dto.CertificateRequestResponseDTO;
+import itmo.blps.blps.dto.CertificateRequestListDTO;
+import itmo.blps.blps.dto.CertificateDecisionDTO;
 import itmo.blps.blps.exception.TaskOperationException;
 import itmo.blps.blps.model.*;
 import itmo.blps.blps.repository.*;
@@ -8,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +87,50 @@ public class CertificateService {
         return new CertificateRequestResponseDTO(
             true,
             "Certificate request status retrieved",
+            request.getStatus().toString()
+        );
+    }
+
+    public List<CertificateRequestListDTO> getPendingRequests(Long courseId) {
+        return certificateRequestRepository.findByCourseIdAndStatus(courseId, CertificateRequestStatus.IN_PROGRESS)
+            .stream()
+            .map(request -> {
+                CertificateRequestListDTO dto = new CertificateRequestListDTO();
+                dto.setRequestId(request.getId());
+                dto.setStudentId(request.getStudent().getId());
+                dto.setStudentUsername(request.getStudent().getUsername());
+                dto.setCourseId(request.getCourse().getId());
+                dto.setCourseName(request.getCourse().getTitle());
+                dto.setStatus(request.getStatus().toString());
+                return dto;
+            })
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public CertificateRequestResponseDTO processCertificateRequest(CertificateDecisionDTO decision) {
+        CertificateRequest request = certificateRequestRepository.findById(decision.getRequestId())
+            .orElseThrow(() -> new TaskOperationException(
+                "REQUEST_NOT_FOUND",
+                "Certificate request not found"
+            ));
+
+        if (request.getStatus() != CertificateRequestStatus.IN_PROGRESS) {
+            throw new TaskOperationException(
+                "INVALID_STATUS",
+                "Can only process requests that are in progress"
+            );
+        }
+
+        request.setStatus(decision.isApproved() 
+            ? CertificateRequestStatus.APPROVED 
+            : CertificateRequestStatus.REJECTED);
+        
+        certificateRequestRepository.save(request);
+
+        return new CertificateRequestResponseDTO(
+            true,
+            decision.isApproved() ? "Certificate request approved" : "Certificate request rejected",
             request.getStatus().toString()
         );
     }
