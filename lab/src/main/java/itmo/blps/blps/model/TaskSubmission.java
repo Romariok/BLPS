@@ -34,4 +34,4 @@ public class TaskSubmission {
     private User teacher;
 
     private boolean automaticallyGraded;
-} 
+}

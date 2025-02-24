@@ -28,4 +28,4 @@ public class Course {
 
     @OneToMany(mappedBy = "course")
     private Set<Task> tasks;
-} 
+}

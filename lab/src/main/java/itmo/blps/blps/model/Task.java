@@ -26,6 +26,6 @@ public class Task {
     private Course course;
 
     private String correctAnswer; // For automatic checking (multiple choice/checkbox)
-    
+
     private Integer maxScore;
-} 
+}

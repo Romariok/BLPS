@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "user_course_roles",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "course_id"}))
+@Table(name = "user_course_roles", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "course_id" }))
 public class UserCourseRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,4 +22,4 @@ public class UserCourseRole {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-} 
+}
