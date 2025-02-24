@@ -3,10 +3,10 @@ package itmo.blps.blps.exception;
 import lombok.Getter;
 
 @Getter
-public class CourseEnrollmentException extends RuntimeException {
+public class TaskOperationException extends RuntimeException {
     private final String reason;
 
-    public CourseEnrollmentException(String reason, String message) {
+    public TaskOperationException(String reason, String message) {
         super(message);
         this.reason = reason;
     }

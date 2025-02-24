@@ -8,4 +8,4 @@ import lombok.Data;
 public class CourseUnavailabilityDTO {
     private String reason;
     private String message;
-} 
+}

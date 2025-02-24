@@ -5,7 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class EnrollmentResponseDTO {
+public class TaskSubmissionResponseDTO {
     private boolean success;
     private String message;
+    private Integer score; // Will be null for non-automatic tasks
 }
