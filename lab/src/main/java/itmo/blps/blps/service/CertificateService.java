@@ -16,10 +16,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CertificateService {
+    private static final float threshold = 0.6f;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final TaskSubmissionRepository submissionRepository;
     private final CertificateRequestRepository certificateRequestRepository;
+    private final TaskRepository taskRepository;
 
     @Transactional
     public CertificateRequestResponseDTO requestCertificate(Long userId, Long courseId) {
@@ -43,8 +45,10 @@ public class CertificateService {
                 "User not found"
             ));
 
-        // Verify course completion
-        boolean allTasksCompleted = course.getTasks().stream()
+        // Get all tasks for the course in a separate query
+        List<Task> courseTasks = taskRepository.findByCourseId(courseId);
+        
+        boolean allTasksCompleted = courseTasks.stream()
             .allMatch(task -> {
                 TaskSubmission submission = submissionRepository
                     .findTopByStudentIdAndTaskIdOrderBySubmittedAtDesc(userId, task.getId())
@@ -52,7 +56,7 @@ public class CertificateService {
                 
                 return submission != null && 
                        submission.getScore() != null && 
-                       submission.getScore() >= task.getMaxScore() * 0.6; // 60% passing threshold
+                       submission.getScore() >= task.getMaxScore() * threshold;
             });
 
         if (!allTasksCompleted) {
