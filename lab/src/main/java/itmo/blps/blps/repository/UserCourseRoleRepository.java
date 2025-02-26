@@ -14,4 +14,6 @@ public interface UserCourseRoleRepository extends JpaRepository<UserCourseRole, 
     Optional<UserCourseRole> findByUserIdAndCourseId(Long userId, Long courseId);
 
     List<UserCourseRole> findByCourseIdAndRole(Long courseId, Role role);
+
+    boolean existsByUserIdAndCourseId(Long userId, Long courseId);
 }

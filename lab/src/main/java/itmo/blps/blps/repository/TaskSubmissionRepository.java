@@ -10,6 +10,8 @@ public interface TaskSubmissionRepository extends JpaRepository<TaskSubmission, 
 
     List<TaskSubmission> findByTaskIdAndAutomaticallyGradedFalse(Long taskId);
 
+    List<TaskSubmission> findByTaskIdAndAutomaticallyGradedFalseAndGradedAtIsNull(Long taskId);
+
     List<TaskSubmission> findByStudentIdAndTaskId(Long studentId, Long taskId);
 
     Optional<TaskSubmission> findTopByStudentIdAndTaskIdOrderBySubmittedAtDesc(Long studentId, Long taskId);
