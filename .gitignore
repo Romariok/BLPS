@@ -1,2 +1,2 @@
-*.properties
 .vscode/settings.json
+*.env
