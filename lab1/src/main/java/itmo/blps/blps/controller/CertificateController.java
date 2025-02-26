@@ -73,7 +73,7 @@ public class CertificateController {
             @ApiResponse(responseCode = "404", description = "Запрос не найден"),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
-    @PostMapping("/process")
+    @PatchMapping("/process")
     public ResponseEntity<CertificateRequestResponseDTO> processCertificateRequest(
             @RequestBody CertificateDecisionDTO decision) throws TaskOperationException {
         return ResponseEntity.ok(certificateService.processCertificateRequest(decision));
