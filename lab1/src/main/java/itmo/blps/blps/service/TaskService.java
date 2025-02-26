@@ -5,6 +5,8 @@ import itmo.blps.blps.dto.TaskSubmissionResponseDTO;
 import itmo.blps.blps.dto.UnscoredSubmissionDTO;
 import itmo.blps.blps.dto.TaskScoreDTO;
 import itmo.blps.blps.exception.TaskOperationException;
+import itmo.blps.blps.exception.InvalidAnswerException;
+import itmo.blps.blps.exception.InvalidScoreException;
 import itmo.blps.blps.model.*;
 import itmo.blps.blps.repository.TaskRepository;
 import itmo.blps.blps.repository.TaskSubmissionRepository;
@@ -50,6 +52,12 @@ public class TaskService {
                                 .orElseThrow(() -> new TaskOperationException(
                                                 "USER_NOT_FOUND",
                                                 "User not found"));
+
+                if (answer == null || answer.trim().isEmpty()) {
+                        throw new InvalidAnswerException(
+                                        "EMPTY_ANSWER",
+                                        "Answer cannot be empty");
+                }
 
                 TaskSubmission submission = new TaskSubmission();
                 submission.setStudent(student);
@@ -117,6 +125,11 @@ public class TaskService {
                 }
                 if (submission.getGradedAt() != null) {
                         throw new TaskOperationException("ALREADY_SCORED", "You can't score the same submission twice");
+                }
+                if (scoreDTO.getScore() < 0) {
+                        throw new InvalidScoreException(
+                                        "NEGATIVE_SCORE",
+                                        "Score cannot be negative");
                 }
                 submission.setScore(scoreDTO.getScore());
                 submission.setTeacher(teacher);

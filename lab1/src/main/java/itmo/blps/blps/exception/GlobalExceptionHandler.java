@@ -13,14 +13,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CourseEnrollmentException.class)
     public ResponseEntity<EnrollmentResponseDTO> handleCourseEnrollmentException(CourseEnrollmentException ex) {
         return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(new EnrollmentResponseDTO(false, ex.getMessage()));
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new EnrollmentResponseDTO(false, ex.getMessage()));
     }
 
     @ExceptionHandler(TaskOperationException.class)
     public ResponseEntity<TaskSubmissionResponseDTO> handleTaskOperationException(TaskOperationException ex) {
         return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(new TaskSubmissionResponseDTO(false, ex.getMessage(), null));
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new TaskSubmissionResponseDTO(false, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(InvalidScoreException.class)
+    public ResponseEntity<TaskSubmissionResponseDTO> handleInvalidScoreException(InvalidScoreException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new TaskSubmissionResponseDTO(false, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(InvalidAnswerException.class)
+    public ResponseEntity<TaskSubmissionResponseDTO> handleInvalidAnswerException(InvalidAnswerException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new TaskSubmissionResponseDTO(false, ex.getMessage(), null));
     }
 }
