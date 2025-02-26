@@ -1,5 +1,6 @@
 package itmo.blps.blps.service;
 
+import itmo.blps.blps.mapper.TaskMapper;
 import itmo.blps.blps.dto.TaskDTO;
 import itmo.blps.blps.dto.TaskSubmissionResponseDTO;
 import itmo.blps.blps.dto.UnscoredSubmissionDTO;
@@ -24,6 +25,7 @@ public class TaskService {
         private final TaskRepository taskRepository;
         private final TaskSubmissionRepository submissionRepository;
         private final UserRepository userRepository;
+        private final TaskMapper taskMapper;
 
         public TaskDTO getTaskById(Long taskId) {
                 Task task = taskRepository.findById(taskId)
@@ -31,14 +33,7 @@ public class TaskService {
                                                 "TASK_NOT_FOUND",
                                                 "Task not found"));
 
-                TaskDTO taskDTO = new TaskDTO();
-                taskDTO.setId(task.getId());
-                taskDTO.setTitle(task.getTitle());
-                taskDTO.setDescription(task.getDescription());
-                taskDTO.setType(task.getType());
-                taskDTO.setMaxScore(task.getMaxScore());
-
-                return taskDTO;
+                return TaskMapper.INSTANCE.taskToTaskDTO(task);
         }
 
         @Transactional
@@ -93,16 +88,7 @@ public class TaskService {
         public List<UnscoredSubmissionDTO> getUnscoredSubmissions(Long taskId) {
                 return submissionRepository.findByTaskIdAndAutomaticallyGradedFalseAndGradedAtIsNull(taskId)
                                 .stream()
-                                .map(submission -> {
-                                        UnscoredSubmissionDTO dto = new UnscoredSubmissionDTO();
-                                        dto.setSubmissionId(submission.getId());
-                                        dto.setTaskId(submission.getTask().getId());
-                                        dto.setStudentId(submission.getStudent().getId());
-                                        dto.setStudentUsername(submission.getStudent().getUsername());
-                                        dto.setAnswer(submission.getAnswer());
-                                        dto.setMaxScore(submission.getTask().getMaxScore());
-                                        return dto;
-                                })
+                                .map(taskMapper::toUnscoredSubmissionDTO)
                                 .collect(Collectors.toList());
         }
 

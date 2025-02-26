@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import itmo.blps.blps.mapper.CertificateMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -22,48 +23,45 @@ public class CertificateService {
     private final TaskSubmissionRepository submissionRepository;
     private final CertificateRequestRepository certificateRequestRepository;
     private final TaskRepository taskRepository;
+    private final CertificateMapper certificateMapper;
 
     @Transactional
     public CertificateRequestResponseDTO requestCertificate(Long userId, Long courseId) {
         // Check if user already requested certificate
         if (certificateRequestRepository.existsByStudentIdAndCourseId(userId, courseId)) {
             throw new TaskOperationException(
-                "DUPLICATE_REQUEST",
-                "Certificate was already requested for this course"
-            );
+                    "DUPLICATE_REQUEST",
+                    "Certificate was already requested for this course");
         }
 
         Course course = courseRepository.findById(courseId)
-            .orElseThrow(() -> new TaskOperationException(
-                "COURSE_NOT_FOUND",
-                "Course not found"
-            ));
+                .orElseThrow(() -> new TaskOperationException(
+                        "COURSE_NOT_FOUND",
+                        "Course not found"));
 
         User student = userRepository.findById(userId)
-            .orElseThrow(() -> new TaskOperationException(
-                "USER_NOT_FOUND",
-                "User not found"
-            ));
+                .orElseThrow(() -> new TaskOperationException(
+                        "USER_NOT_FOUND",
+                        "User not found"));
 
         // Get all tasks for the course in a separate query
         List<Task> courseTasks = taskRepository.findByCourseId(courseId);
-        
+
         boolean allTasksCompleted = courseTasks.stream()
-            .allMatch(task -> {
-                TaskSubmission submission = submissionRepository
-                    .findTopByStudentIdAndTaskIdOrderBySubmittedAtDesc(userId, task.getId())
-                    .orElse(null);
-                
-                return submission != null && 
-                       submission.getScore() != null && 
-                       submission.getScore() >= task.getMaxScore() * threshold;
-            });
+                .allMatch(task -> {
+                    TaskSubmission submission = submissionRepository
+                            .findTopByStudentIdAndTaskIdOrderBySubmittedAtDesc(userId, task.getId())
+                            .orElse(null);
+
+                    return submission != null &&
+                            submission.getScore() != null &&
+                            submission.getScore() >= task.getMaxScore() * threshold;
+                });
 
         if (!allTasksCompleted) {
             throw new TaskOperationException(
-                "INCOMPLETE_COURSE",
-                "Not all tasks are completed with passing score"
-            );
+                    "INCOMPLETE_COURSE",
+                    "Not all tasks are completed with passing score");
         }
 
         // Save certificate request
@@ -75,67 +73,52 @@ public class CertificateService {
         certificateRequestRepository.save(request);
 
         return new CertificateRequestResponseDTO(
-            true,
-            "Certificate request submitted successfully",
-            "IN_PROGRESS"
-        );
+                true,
+                "Certificate request submitted successfully",
+                "IN_PROGRESS");
     }
 
     public CertificateRequestResponseDTO checkRequestStatus(Long userId, Long courseId) {
         CertificateRequest request = certificateRequestRepository.findByStudentIdAndCourseId(userId, courseId)
                 .orElseThrow(() -> new TaskOperationException(
-                    "REQUEST_NOT_FOUND",
-                    "Certificate request not found"
-                ));
+                        "REQUEST_NOT_FOUND",
+                        "Certificate request not found"));
 
         return new CertificateRequestResponseDTO(
-            true,
-            "Certificate request status retrieved",
-            request.getStatus().toString()
-        );
+                true,
+                "Certificate request status retrieved",
+                request.getStatus().toString());
     }
 
     public List<CertificateRequestListDTO> getPendingRequests(Long courseId) {
         return certificateRequestRepository.findByCourseIdAndStatus(courseId, CertificateRequestStatus.IN_PROGRESS)
-            .stream()
-            .map(request -> {
-                CertificateRequestListDTO dto = new CertificateRequestListDTO();
-                dto.setRequestId(request.getId());
-                dto.setStudentId(request.getStudent().getId());
-                dto.setStudentUsername(request.getStudent().getUsername());
-                dto.setCourseId(request.getCourse().getId());
-                dto.setCourseName(request.getCourse().getTitle());
-                dto.setStatus(request.getStatus().toString());
-                return dto;
-            })
-            .collect(Collectors.toList());
+                .stream()
+                .map(certificateMapper::toCertificateRequestListDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public CertificateRequestResponseDTO processCertificateRequest(CertificateDecisionDTO decision) {
         CertificateRequest request = certificateRequestRepository.findById(decision.getRequestId())
-            .orElseThrow(() -> new TaskOperationException(
-                "REQUEST_NOT_FOUND",
-                "Certificate request not found"
-            ));
+                .orElseThrow(() -> new TaskOperationException(
+                        "REQUEST_NOT_FOUND",
+                        "Certificate request not found"));
 
         if (request.getStatus() != CertificateRequestStatus.IN_PROGRESS) {
             throw new TaskOperationException(
-                "INVALID_STATUS",
-                "Can only process requests that are in progress"
-            );
+                    "INVALID_STATUS",
+                    "Can only process requests that are in progress");
         }
 
-        request.setStatus(decision.isApproved() 
-            ? CertificateRequestStatus.APPROVED 
-            : CertificateRequestStatus.REJECTED);
-        
+        request.setStatus(decision.isApproved()
+                ? CertificateRequestStatus.APPROVED
+                : CertificateRequestStatus.REJECTED);
+
         certificateRequestRepository.save(request);
 
         return new CertificateRequestResponseDTO(
-            true,
-            decision.isApproved() ? "Certificate request approved" : "Certificate request rejected",
-            request.getStatus().toString()
-        );
+                true,
+                decision.isApproved() ? "Certificate request approved" : "Certificate request rejected",
+                request.getStatus().toString());
     }
-} 
+}

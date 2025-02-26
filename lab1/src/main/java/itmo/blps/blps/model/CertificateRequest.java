@@ -1,7 +1,7 @@
 package itmo.blps.blps.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -25,4 +25,4 @@ public class CertificateRequest {
 
     @Enumerated(EnumType.STRING)
     private CertificateRequestStatus status;
-} 
+}
