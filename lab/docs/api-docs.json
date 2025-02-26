@@ -1,0 +1,657 @@
+{
+  "openapi": "3.0.1",
+  "info": { "title": "OpenAPI definition", "version": "v0" },
+  "servers": [
+    { "url": "http://localhost:8080", "description": "Generated server url" }
+  ],
+  "tags": [
+    {
+      "name": "Сертификаты",
+      "description": "API для управления сертификатами курсов"
+    },
+    {
+      "name": "Запись на курсы",
+      "description": "API для управления записью студентов на курсы"
+    },
+    { "name": "Задания", "description": "API для работы с заданиями курса" }
+  ],
+  "paths": {
+    "/api/tasks/submit": {
+      "post": {
+        "tags": ["Задания"],
+        "summary": "Отправить ответ на задание",
+        "description": "Позволяет студенту отправить ответ на задание",
+        "operationId": "submitTask",
+        "requestBody": {
+          "description": "Данные для отправки ответа на задание",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TaskSubmissionDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "403": {
+            "description": "Пользователь не записан на курс",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSubmissionResponseDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSubmissionResponseDTO"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Ответ успешно отправлен",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSubmissionResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Некорректные данные",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskSubmissionResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/score": {
+      "post": {
+        "tags": ["Задания"],
+        "summary": "Оценить ответ студента",
+        "description": "Позволяет преподавателю оценить ответ студента на задание",
+        "operationId": "scoreSubmission",
+        "parameters": [
+          {
+            "name": "teacherId",
+            "in": "query",
+            "description": "ID преподавателя",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "description": "Данные для оценки ответа",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TaskScoreDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": { "description": "Ответ успешно оценен" },
+          "403": { "description": "Недостаточно прав для оценки" },
+          "500": { "description": "Внутренняя ошибка сервера" },
+          "404": { "description": "Ответ на задание не найден" },
+          "400": { "description": "Некорректные данные" }
+        }
+      }
+    },
+    "/api/courses/enroll": {
+      "post": {
+        "tags": ["Запись на курсы"],
+        "summary": "Записаться на курс",
+        "description": "Позволяет пользователю записаться на доступный курс",
+        "operationId": "enrollInCourse",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/EnrollmentRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Успешная запись на курс",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrollmentResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Курс не найден",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrollmentResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Курс недоступен или уже завершен",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrollmentResponseDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrollmentResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные параметры запроса",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrollmentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/certificates/request": {
+      "post": {
+        "tags": ["Сертификаты"],
+        "summary": "Запрос на выдачу сертификата",
+        "description": "Создает запрос на получение сертификата для указанного пользователя и курса",
+        "operationId": "requestCertificate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CertificateRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Запрос успешно создан",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные параметры запроса",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/certificates/process": {
+      "post": {
+        "tags": ["Сертификаты"],
+        "summary": "Обработка запроса на сертификат",
+        "description": "Позволяет одобрить или отклонить запрос на выдачу сертификата",
+        "operationId": "processCertificateRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateDecisionDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Запрос успешно обработан",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные параметры запроса",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Запрос не найден",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{taskId}": {
+      "get": {
+        "tags": ["Задания"],
+        "summary": "Получить задание по ID",
+        "description": "Возвращает информацию о задании по указанному ID",
+        "operationId": "getTask",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "ID задания",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Задание не найдено",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/TaskDTO" } }
+            }
+          },
+          "200": {
+            "description": "Задание найдено",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/TaskDTO" } }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/TaskDTO" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{taskId}/unscored": {
+      "get": {
+        "tags": ["Задания"],
+        "summary": "Получить неоцененные ответы",
+        "description": "Возвращает список неоцененных ответов студентов на задание",
+        "operationId": "getUnscoredSubmissions",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "ID задания",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список успешно получен",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnscoredSubmissionDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Задание не найдено",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnscoredSubmissionDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UnscoredSubmissionDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{taskId}/submissions": {
+      "get": {
+        "tags": ["Задания"],
+        "summary": "Получить ответы студента",
+        "description": "Возвращает список ответов конкретного студента на задание",
+        "operationId": "getSubmissions",
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "description": "ID задания",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID студента",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список успешно получен",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskSubmissionResponseDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskSubmissionResponseDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Задание или студент не найдены",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskSubmissionResponseDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/certificates/status": {
+      "get": {
+        "tags": ["Сертификаты"],
+        "summary": "Проверка статуса запроса на сертификат",
+        "description": "Возвращает текущий статус запроса на сертификат",
+        "operationId": "checkRequestStatus",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "ID пользователя",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "courseId",
+            "in": "query",
+            "description": "ID курса",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Статус запроса получен",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Запрос не найден",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/certificates/course/{courseId}/pending": {
+      "get": {
+        "tags": ["Сертификаты"],
+        "summary": "Получение списка ожидающих запросов на сертификаты",
+        "description": "Возвращает список необработанных запросов на сертификаты для указанного курса",
+        "operationId": "getPendingRequests",
+        "parameters": [
+          {
+            "name": "courseId",
+            "in": "path",
+            "description": "ID курса",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Курс не найден",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CertificateRequestListDTO"
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Список запросов получен",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateRequestListDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CertificateRequestListDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TaskSubmissionDTO": {
+        "type": "object",
+        "properties": {
+          "taskId": { "type": "integer", "format": "int64" },
+          "userId": { "type": "integer", "format": "int64" },
+          "answer": { "type": "string" }
+        }
+      },
+      "TaskSubmissionResponseDTO": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "score": { "type": "integer", "format": "int32" }
+        }
+      },
+      "TaskScoreDTO": {
+        "type": "object",
+        "properties": {
+          "submissionId": { "type": "integer", "format": "int64" },
+          "score": { "type": "integer", "format": "int32" }
+        }
+      },
+      "EnrollmentRequestDTO": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "integer", "format": "int64" },
+          "courseId": { "type": "integer", "format": "int64" }
+        }
+      },
+      "EnrollmentResponseDTO": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" }
+        }
+      },
+      "CertificateRequestDTO": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "integer", "format": "int64" },
+          "courseId": { "type": "integer", "format": "int64" }
+        }
+      },
+      "CertificateRequestResponseDTO": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      },
+      "CertificateDecisionDTO": {
+        "type": "object",
+        "properties": {
+          "requestId": { "type": "integer", "format": "int64" },
+          "approved": { "type": "boolean" }
+        }
+      },
+      "TaskDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["MULTIPLE_CHOICE", "CHECKBOX", "WRITTEN"]
+          },
+          "maxScore": { "type": "integer", "format": "int32" }
+        }
+      },
+      "UnscoredSubmissionDTO": {
+        "type": "object",
+        "properties": {
+          "submissionId": { "type": "integer", "format": "int64" },
+          "taskId": { "type": "integer", "format": "int64" },
+          "studentId": { "type": "integer", "format": "int64" },
+          "studentUsername": { "type": "string" },
+          "answer": { "type": "string" },
+          "maxScore": { "type": "integer", "format": "int32" }
+        }
+      },
+      "CertificateRequestListDTO": {
+        "type": "object",
+        "properties": {
+          "requestId": { "type": "integer", "format": "int64" },
+          "studentId": { "type": "integer", "format": "int64" },
+          "studentUsername": { "type": "string" },
+          "courseId": { "type": "integer", "format": "int64" },
+          "courseName": { "type": "string" },
+          "status": { "type": "string" }
+        }
+      }
+    }
+  }
+}
