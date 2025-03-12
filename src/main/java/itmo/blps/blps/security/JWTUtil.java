@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -16,8 +17,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JWTUtil {
-    private final String secretKey = System.getenv("JWT_SECRET");
-    private final long expirationTime = Long.parseLong(System.getenv("JWT_EXPIRATION_TIME"));
+    @Value("${jwt.secret}") 
+    private String secretKey;
+
+    @Value("${jwt.expiration}")
+    private long expirationTime;
 
     public String generateToken(String username) {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
