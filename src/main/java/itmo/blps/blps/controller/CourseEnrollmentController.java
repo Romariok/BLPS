@@ -23,15 +23,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class CourseEnrollmentController {
     private final CourseEnrollmentService courseEnrollmentService;
 
-    @Operation(summary = "Записаться на курс", 
-               description = "Позволяет пользователю записаться на доступный курс")
+    @Operation(summary = "Записаться на курс", description = "Позволяет пользователю записаться на доступный курс")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Успешная запись на курс",
-                     content = @Content(schema = @Schema(implementation = EnrollmentResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Неверные параметры запроса"),
-        @ApiResponse(responseCode = "404", description = "Курс не найден"),
-        @ApiResponse(responseCode = "409", description = "Курс недоступен или уже завершен"),
-        @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+            @ApiResponse(responseCode = "200", description = "Успешная запись на курс", content = @Content(schema = @Schema(implementation = EnrollmentResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Неверные параметры запроса"),
+            @ApiResponse(responseCode = "404", description = "Курс не найден"),
+            @ApiResponse(responseCode = "409", description = "Курс недоступен или уже завершен"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @PostMapping("/enroll")
     public ResponseEntity<EnrollmentResponseDTO> enrollInCourse(@RequestBody EnrollmentRequestDTO request)

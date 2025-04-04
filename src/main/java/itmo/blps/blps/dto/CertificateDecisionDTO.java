@@ -6,4 +6,4 @@ import lombok.Data;
 public class CertificateDecisionDTO {
     private Long requestId;
     private boolean approved;
-} 
+}

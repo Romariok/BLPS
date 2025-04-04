@@ -17,12 +17,13 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class JWTUtil {
-    @Value("${jwt.secret}") 
+    @Value("${jwt.secret}")
     private String secretKey;
 
     @Value("${jwt.expiration}")
     private long expirationTime;
 
+    // Legacy method - kept for backward compatibility
     public String generateToken(String username) {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         return Jwts.builder()
@@ -31,12 +32,13 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String generateToken(String username, Set<String> roles) {
+    // Enhanced method that supports all authorities (roles and permissions)
+    public String generateToken(String username, Set<String> authorities) {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
-        String roleString = String.join(",", roles);
+        String authoritiesString = String.join(",", authorities);
         return Jwts.builder()
                 .setSubject(username)
-                .claim("roles", roleString)
+                .claim("authorities", authoritiesString)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -58,15 +60,15 @@ public class JWTUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
     }
 
-    public Set<String> getRolesFromToken(String token) {
+    public Set<String> getAuthoritiesFromToken(String token) {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        String roles = claims.get("roles", String.class);
-        return Set.of(roles.split(","));
+        String authorities = claims.get("authorities", String.class);
+        return Set.of(authorities.split(","));
     }
 
     public String getJwtFromRequest(HttpServletRequest request) {

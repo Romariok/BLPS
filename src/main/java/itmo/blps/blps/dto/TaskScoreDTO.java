@@ -6,4 +6,4 @@ import lombok.Data;
 public class TaskScoreDTO {
     private Long submissionId;
     private Integer score;
-} 
+}

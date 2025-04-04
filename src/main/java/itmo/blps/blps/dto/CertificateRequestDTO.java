@@ -6,4 +6,4 @@ import lombok.Data;
 public class CertificateRequestDTO {
     private Long userId;
     private Long courseId;
-} 
+}

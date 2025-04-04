@@ -5,4 +5,4 @@ public enum CertificateRequestStatus {
     APPROVED,
     REJECTED,
     CANCELLED
-} 
+}

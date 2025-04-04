@@ -13,4 +13,4 @@ public class RegisterRequestDTO {
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
-} 
+}

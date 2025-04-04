@@ -9,4 +9,4 @@ public class CertificateRequestResponseDTO {
     private boolean success;
     private String message;
     private String status;
-} 
+}

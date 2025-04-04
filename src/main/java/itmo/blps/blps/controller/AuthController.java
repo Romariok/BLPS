@@ -25,28 +25,24 @@ public class AuthController {
 
     @Operation(summary = "Регистрация нового пользователя", description = "Создает нового пользователя и возвращает JWT токен")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Пользователь успешно зарегистрирован", 
-                     content = @Content(schema = @Schema(implementation = AuthResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Ошибка валидации данных"),
-        @ApiResponse(responseCode = "409", description = "Имя пользователя уже занято")
+            @ApiResponse(responseCode = "200", description = "Пользователь успешно зарегистрирован", content = @Content(schema = @Schema(implementation = AuthResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Ошибка валидации данных"),
+            @ApiResponse(responseCode = "409", description = "Имя пользователя уже занято")
     })
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> registerUser(
-        @Valid @RequestBody RegisterRequestDTO registerRequest
-    ) {
+            @Valid @RequestBody RegisterRequestDTO registerRequest) {
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
     @Operation(summary = "Вход пользователя", description = "Аутентификация пользователя и получение JWT токена")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Успешный вход", 
-                     content = @Content(schema = @Schema(implementation = AuthResponseDTO.class))),
-        @ApiResponse(responseCode = "401", description = "Неверные учетные данные")
+            @ApiResponse(responseCode = "200", description = "Успешный вход", content = @Content(schema = @Schema(implementation = AuthResponseDTO.class))),
+            @ApiResponse(responseCode = "401", description = "Неверные учетные данные")
     })
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> loginUser(
-        @Valid @RequestBody LoginRequestDTO loginRequest
-    ) {
+            @Valid @RequestBody LoginRequestDTO loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
-} 
+}

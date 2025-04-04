@@ -10,4 +10,4 @@ public class UnscoredSubmissionDTO {
     private String studentUsername;
     private String answer;
     private Integer maxScore;
-} 
+}

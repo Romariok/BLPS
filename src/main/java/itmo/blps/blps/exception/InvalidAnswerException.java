@@ -10,4 +10,4 @@ public class InvalidAnswerException extends RuntimeException {
         super(message);
         this.reason = reason;
     }
-} 
+}

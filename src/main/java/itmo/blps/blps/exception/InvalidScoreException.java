@@ -10,4 +10,4 @@ public class InvalidScoreException extends RuntimeException {
         super(message);
         this.reason = reason;
     }
-} 
+}

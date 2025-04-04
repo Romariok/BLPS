@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +21,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JWTUtil jwtUtil = new JWTUtil();
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @SuppressWarnings("null")
     @Override
@@ -32,21 +34,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(jwt) && jwtUtil.validateToken(jwt)) {
                 String username = jwtUtil.getUsernameFromToken(jwt);
-                Set<String> roles = jwtUtil.getRolesFromToken(jwt);
+                Set<String> authorities = jwtUtil.getAuthoritiesFromToken(jwt);
 
-                Set<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                // Convert string authorities to SimpleGrantedAuthority objects
+                // No need to add "ROLE_" prefix as it's already included in the token
+                Set<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
+                        .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toSet());
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
-                        null, authorities);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        username, null, grantedAuthorities);
+
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            System.out.println("Could not set user authentication in security context");
+            logger.error("Could not set user authentication in security context", ex);
         }
 
         filterChain.doFilter(request, response);

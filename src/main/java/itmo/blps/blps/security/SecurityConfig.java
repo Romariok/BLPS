@@ -3,10 +3,10 @@ package itmo.blps.blps.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,22 +19,45 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import itmo.blps.blps.model.Permission;
+
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    @Lazy
     private UserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // Course-related endpoints with permission checks
+                        .requestMatchers("/api/courses").hasAuthority(Permission.VIEW_COURSE.name())
+                        .requestMatchers("/api/courses/*/enroll").hasAuthority(Permission.VIEW_COURSE.name())
+                        .requestMatchers(("/api/courses/new")).hasAuthority(Permission.CREATE_COURSE.name())
+                        .requestMatchers("/api/courses/*/edit").hasAuthority(Permission.EDIT_COURSE.name())
+                        .requestMatchers("/api/courses/*/delete").hasAuthority(Permission.DELETE_COURSE.name())
+
+                        // Task-related endpoints with permission checks
+                        .requestMatchers("/api/tasks").hasAuthority(Permission.VIEW_TASK.name())
+                        .requestMatchers("/api/tasks/*/submit").hasAuthority(Permission.SUBMIT_TASK.name())
+                        .requestMatchers("/api/tasks/*/grade").hasAuthority(Permission.GRADE_TASK.name())
+
+                        // Certificate-related endpoints with permission checks
+                        .requestMatchers("/api/certificates").hasAuthority(Permission.VIEW_CERTIFICATE.name())
+                        .requestMatchers("/api/certificates/issue").hasAuthority(Permission.ISSUE_CERTIFICATE.name())
+                        .requestMatchers("/api/certificates/verify").hasAuthority(Permission.VERIFY_CERTIFICATE.name())
+
+                        // Require authentication for any other request
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

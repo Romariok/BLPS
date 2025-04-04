@@ -10,4 +10,4 @@ public class CertificateRequestListDTO {
     private Long courseId;
     private String courseName;
     private String status;
-} 
+}
