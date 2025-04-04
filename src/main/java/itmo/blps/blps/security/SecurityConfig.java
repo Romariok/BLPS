@@ -32,14 +32,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/certificates/course/**").hasRole("ADMIN")
-                        .requestMatchers("/api/certificates/process/**").hasRole("ADMIN")
-                        .requestMatchers("/api/tasks/{taskId}/unscored").hasRole("ADMIN")
-                        .requestMatchers("/api/tasks/score").hasRole("ADMIN")
-                        .requestMatchers("/api/tasks/{taskId}/submissions").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -51,15 +46,10 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("OPTIONS");
-        configuration.addAllowedMethod("PATCH");
+        configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 
