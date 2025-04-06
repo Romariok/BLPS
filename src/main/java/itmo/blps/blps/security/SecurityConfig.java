@@ -1,5 +1,6 @@
 package itmo.blps.blps.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,7 @@ import itmo.blps.blps.model.Permission;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@Slf4j
 public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -33,12 +35,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        log.info("Configuring security filter chain");
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // Public endpoints - make sure to explicitly permit ALL auth endpoints
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
                         // Course-related endpoints with permission checks
                         .requestMatchers("/api/courses").hasAuthority(Permission.VIEW_COURSE.name())
@@ -56,6 +59,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/certificates").hasAuthority(Permission.VIEW_CERTIFICATE.name())
                         .requestMatchers("/api/certificates/issue").hasAuthority(Permission.ISSUE_CERTIFICATE.name())
                         .requestMatchers("/api/certificates/verify").hasAuthority(Permission.VERIFY_CERTIFICATE.name())
+
+                        // Swagger UI and API docs
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         // Require authentication for any other request
                         .anyRequest().authenticated())

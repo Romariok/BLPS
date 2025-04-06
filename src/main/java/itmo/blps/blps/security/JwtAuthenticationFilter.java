@@ -17,8 +17,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -29,15 +31,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+        // Skip filter for auth endpoints
+        if (path.startsWith("/api/auth/")) {
+            log.debug("Skipping JWT filter for auth endpoint: {}", path);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String jwt = jwtUtil.getJwtFromRequest(request);
+            log.debug("Processing request to {}, JWT present: {}", path, StringUtils.hasText(jwt));
 
             if (StringUtils.hasText(jwt) && jwtUtil.validateToken(jwt)) {
                 String username = jwtUtil.getUsernameFromToken(jwt);
                 Set<String> authorities = jwtUtil.getAuthoritiesFromToken(jwt);
 
+                log.debug("Valid JWT for user: {}, authorities: {}", username, authorities);
+
                 // Convert string authorities to SimpleGrantedAuthority objects
-                // No need to add "ROLE_" prefix as it's already included in the token
                 Set<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toSet());
@@ -49,9 +63,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("Authentication set in SecurityContext for user: {}", username);
             }
         } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
+            log.error("Could not set user authentication in security context", ex);
         }
 
         filterChain.doFilter(request, response);

@@ -30,12 +30,17 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        // Get all roles associated with the user from their courses
-        Set<Role> roles = user.getCourseRoles().stream()
-                .map(UserCourseRole::getRole)
-                .collect(Collectors.toSet());
+        // Initialize roles set
+        Set<Role> roles = new HashSet<>();
 
-        // Always add USER role for authenticated users
+        // Get all roles associated with the user from their courses if they exist
+        if (user.getCourseRoles() != null) {
+            roles.addAll(user.getCourseRoles().stream()
+                    .map(UserCourseRole::getRole)
+                    .collect(Collectors.toSet()));
+        }
+
+        // Always add STUDENT role for authenticated users
         roles.add(Role.STUDENT);
 
         // Collect all permissions for all roles
