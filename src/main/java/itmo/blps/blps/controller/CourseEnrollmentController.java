@@ -2,6 +2,7 @@ package itmo.blps.blps.controller;
 
 import itmo.blps.blps.dto.EnrollmentRequestDTO;
 import itmo.blps.blps.dto.EnrollmentResponseDTO;
+import itmo.blps.blps.security.SecurityUtils;
 import itmo.blps.blps.service.CourseEnrollmentService;
 
 import itmo.blps.blps.exception.TaskOperationException;
@@ -22,8 +23,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Запись на курсы", description = "API для управления записью студентов на курсы")
 public class CourseEnrollmentController {
     private final CourseEnrollmentService courseEnrollmentService;
+    private final SecurityUtils securityUtils;
 
-    @Operation(summary = "Записаться на курс", description = "Позволяет пользователю записаться на доступный курс")
+    @Operation(summary = "Записаться на курс", description = "Позволяет текущему пользователю записаться на доступный курс")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Успешная запись на курс", content = @Content(schema = @Schema(implementation = EnrollmentResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Неверные параметры запроса"),
@@ -34,8 +36,11 @@ public class CourseEnrollmentController {
     @PostMapping("/enroll")
     public ResponseEntity<EnrollmentResponseDTO> enrollInCourse(@RequestBody EnrollmentRequestDTO request)
             throws TaskOperationException {
+        // Get the current user ID from security context
+        Long currentUserId = securityUtils.getCurrentUserId();
+        
         courseEnrollmentService.checkCourseAvailability(request.getCourseId());
-        courseEnrollmentService.enrollInCourse(request.getUserId(), request.getCourseId());
+        courseEnrollmentService.enrollInCourse(currentUserId, request.getCourseId());
         return ResponseEntity.ok(new EnrollmentResponseDTO(true, "Successfully enrolled in course"));
     }
 }
