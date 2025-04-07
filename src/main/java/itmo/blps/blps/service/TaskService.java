@@ -115,6 +115,13 @@ public class TaskService {
                                 .orElseThrow(() -> new TaskOperationException(
                                                 "TEACHER_NOT_FOUND",
                                                 "Teacher not found"));
+                                
+                // Verify the user is a teacher
+                if (teacher.getRole() != Role.TEACHER) {
+                        throw new TaskOperationException(
+                                "UNAUTHORIZED_ROLE",
+                                "Only teachers can score submissions");
+                }
 
                 if (scoreDTO.getScore() > submission.getTask().getMaxScore()) {
                         throw new TaskOperationException(
