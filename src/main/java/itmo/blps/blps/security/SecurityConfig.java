@@ -61,7 +61,8 @@ public class SecurityConfig {
                         // Certificate-related endpoints with permission checks
                         .requestMatchers("/api/certificates/request").hasAuthority(Permission.VIEW_CERTIFICATE.name())
                         .requestMatchers("/api/certificates/status/*").hasAuthority(Permission.VIEW_CERTIFICATE.name())
-                        .requestMatchers("/api/certificates/course/*/pending").hasAuthority(Permission.ISSUE_CERTIFICATE.name())
+                        .requestMatchers("/api/certificates/course/*/pending")
+                        .hasAuthority(Permission.ISSUE_CERTIFICATE.name())
                         .requestMatchers("/api/certificates/process").hasAuthority(Permission.ISSUE_CERTIFICATE.name())
                         .requestMatchers("/api/certificates/verify").hasAuthority(Permission.VERIFY_CERTIFICATE.name())
 
