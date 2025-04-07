@@ -23,6 +23,10 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
     @OneToMany(mappedBy = "user")
     private Set<UserCourseRole> courseRoles = new HashSet<>();

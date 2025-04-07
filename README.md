@@ -16,7 +16,6 @@ The security system is built on two key concepts:
 - **RolePermission**: Maps roles to permissions in a many-to-many relationship
 - **JWTUtil**: Manages token generation and validation with authorities
 - **SecurityConfig**: Configures URL-based access control using permissions
-- **Method Security**: @PreAuthorize annotations for method-level security
 
 ### Authorization Process
 
@@ -24,7 +23,6 @@ The security system is built on two key concepts:
 2. JwtAuthenticationFilter extracts authorities from token
 3. Security decisions are made based on:
    - URL patterns in SecurityConfig
-   - Method-level annotations (@PreAuthorize)
    - JSR-250 annotations (if used)
 
 ### Default Role Permissions

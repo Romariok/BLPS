@@ -6,7 +6,6 @@ import itmo.blps.blps.repository.CourseRepository;
 import itmo.blps.blps.repository.UserCourseRoleRepository;
 import itmo.blps.blps.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +16,6 @@ public class CourseEnrollmentService {
         private final UserCourseRoleRepository userCourseRoleRepository;
         private final UserRepository userRepository;
 
-        @PreAuthorize("hasAuthority('VIEW_COURSE')")
         public void checkCourseAvailability(Long courseId) {
                 Course course = courseRepository.findById(courseId)
                                 .orElseThrow(() -> new CourseEnrollmentException(
@@ -32,7 +30,7 @@ public class CourseEnrollmentService {
         }
 
         @Transactional
-        @PreAuthorize("hasAuthority('VIEW_COURSE')")
+
         public void enrollInCourse(Long userId, Long courseId) {
                 // First check if the user is already enrolled
                 if (userCourseRoleRepository.existsByUserIdAndCourseId(userId, courseId)) {
@@ -57,14 +55,20 @@ public class CourseEnrollmentService {
                                         "This course is currently not available for enrollment");
                 }
 
+                // Check if user has STUDENT role
+                if (user.getRole() != Role.STUDENT) {
+                        throw new CourseEnrollmentException(
+                                "INVALID_ROLE",
+                                "Only students can enroll in courses");
+                }
+
                 UserCourseRole enrollment = new UserCourseRole();
                 enrollment.setUser(user);
                 enrollment.setCourse(course);
-                enrollment.setRole(Role.STUDENT);
                 userCourseRoleRepository.save(enrollment);
         }
 
-        @PreAuthorize("hasAuthority('VIEW_COURSE')")
+
         public boolean isCourseAvailable(Long courseId) {
                 return courseRepository.findById(courseId)
                                 .map(Course::isAvailable)

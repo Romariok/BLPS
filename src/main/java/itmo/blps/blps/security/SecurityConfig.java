@@ -44,19 +44,19 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
                         // Course-related endpoints with permission checks
-                        .requestMatchers("/api/courses").hasAuthority(Permission.VIEW_COURSE.name())
-                        .requestMatchers("/api/courses/enroll").hasAuthority(Permission.VIEW_COURSE.name())
                         .requestMatchers("/api/courses/new").hasAuthority(Permission.CREATE_COURSE.name())
                         .requestMatchers("/api/courses/*/edit").hasAuthority(Permission.EDIT_COURSE.name())
                         .requestMatchers("/api/courses/*/delete").hasAuthority(Permission.DELETE_COURSE.name())
+                        .requestMatchers("/api/courses/enroll").hasAuthority(Permission.VIEW_COURSE.name())
+                        .requestMatchers("/api/courses").hasAuthority(Permission.VIEW_COURSE.name())
 
                         // Task-related endpoints with permission checks
-                        .requestMatchers("/api/tasks").hasAuthority(Permission.VIEW_TASK.name())
-                        .requestMatchers("/api/tasks/*").hasAuthority(Permission.VIEW_TASK.name())
                         .requestMatchers("/api/tasks/submit").hasAuthority(Permission.SUBMIT_TASK.name())
-                        .requestMatchers("/api/tasks/*/submissions").hasAuthority(Permission.VIEW_TASK.name())
-                        .requestMatchers("/api/tasks/*/unscored").hasAuthority(Permission.GRADE_TASK.name())
                         .requestMatchers("/api/tasks/score").hasAuthority(Permission.GRADE_TASK.name())
+                        .requestMatchers("/api/tasks/*/unscored").hasAuthority(Permission.GRADE_TASK.name())
+                        .requestMatchers("/api/tasks/*/submissions").hasAuthority(Permission.VIEW_TASK.name())
+                        .requestMatchers("/api/tasks/*").hasAuthority(Permission.VIEW_TASK.name())
+                        .requestMatchers("/api/tasks").hasAuthority(Permission.VIEW_TASK.name())
 
                         // Certificate-related endpoints with permission checks
                         .requestMatchers("/api/certificates/request").hasAuthority(Permission.VIEW_CERTIFICATE.name())

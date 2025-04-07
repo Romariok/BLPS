@@ -35,13 +35,15 @@ public class TaskController {
         @ApiResponses(value = {
                         @ApiResponse(responseCode = "200", description = "Задание найдено", content = @Content(schema = @Schema(implementation = TaskDTO.class))),
                         @ApiResponse(responseCode = "404", description = "Задание не найдено"),
+                        @ApiResponse(responseCode = "403", description = "Пользователь не записан на курс"),
                         @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
         })
         @GetMapping("/{taskId}")
         public ResponseEntity<TaskDTO> getTask(
                         @Parameter(description = "ID задания") @PathVariable Long taskId)
                         throws TaskOperationException {
-                return ResponseEntity.ok(taskService.getTaskById(taskId));
+                Long currentUserId = securityUtils.getCurrentUserId();
+                return ResponseEntity.ok(taskService.getTaskById(currentUserId, taskId));
         }
 
         @Operation(summary = "Отправить ответ на задание", description = "Позволяет текущему пользователю отправить ответ на задание")
@@ -75,7 +77,10 @@ public class TaskController {
         public ResponseEntity<List<UnscoredSubmissionDTO>> getUnscoredSubmissions(
                         @Parameter(description = "ID задания") @PathVariable Long taskId)
                         throws TaskOperationException {
-                return ResponseEntity.ok(taskService.getUnscoredSubmissions(taskId));
+                // Get the current teacher ID from security context
+                Long currentTeacherId = securityUtils.getCurrentUserId();
+                
+                return ResponseEntity.ok(taskService.getUnscoredSubmissions(currentTeacherId, taskId));
         }
 
         @Operation(summary = "Оценить ответ студента", description = "Позволяет текущему преподавателю оценить ответ студента на задание")
