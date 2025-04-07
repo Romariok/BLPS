@@ -45,19 +45,24 @@ public class SecurityConfig {
 
                         // Course-related endpoints with permission checks
                         .requestMatchers("/api/courses").hasAuthority(Permission.VIEW_COURSE.name())
-                        .requestMatchers("/api/courses/*/enroll").hasAuthority(Permission.VIEW_COURSE.name())
-                        .requestMatchers(("/api/courses/new")).hasAuthority(Permission.CREATE_COURSE.name())
+                        .requestMatchers("/api/courses/enroll").hasAuthority(Permission.VIEW_COURSE.name())
+                        .requestMatchers("/api/courses/new").hasAuthority(Permission.CREATE_COURSE.name())
                         .requestMatchers("/api/courses/*/edit").hasAuthority(Permission.EDIT_COURSE.name())
                         .requestMatchers("/api/courses/*/delete").hasAuthority(Permission.DELETE_COURSE.name())
 
                         // Task-related endpoints with permission checks
                         .requestMatchers("/api/tasks").hasAuthority(Permission.VIEW_TASK.name())
-                        .requestMatchers("/api/tasks/*/submit").hasAuthority(Permission.SUBMIT_TASK.name())
-                        .requestMatchers("/api/tasks/*/grade").hasAuthority(Permission.GRADE_TASK.name())
+                        .requestMatchers("/api/tasks/*").hasAuthority(Permission.VIEW_TASK.name())
+                        .requestMatchers("/api/tasks/submit").hasAuthority(Permission.SUBMIT_TASK.name())
+                        .requestMatchers("/api/tasks/*/submissions").hasAuthority(Permission.VIEW_TASK.name())
+                        .requestMatchers("/api/tasks/*/unscored").hasAuthority(Permission.GRADE_TASK.name())
+                        .requestMatchers("/api/tasks/score").hasAuthority(Permission.GRADE_TASK.name())
 
                         // Certificate-related endpoints with permission checks
-                        .requestMatchers("/api/certificates").hasAuthority(Permission.VIEW_CERTIFICATE.name())
-                        .requestMatchers("/api/certificates/issue").hasAuthority(Permission.ISSUE_CERTIFICATE.name())
+                        .requestMatchers("/api/certificates/request").hasAuthority(Permission.VIEW_CERTIFICATE.name())
+                        .requestMatchers("/api/certificates/status/*").hasAuthority(Permission.VIEW_CERTIFICATE.name())
+                        .requestMatchers("/api/certificates/course/*/pending").hasAuthority(Permission.ISSUE_CERTIFICATE.name())
+                        .requestMatchers("/api/certificates/process").hasAuthority(Permission.ISSUE_CERTIFICATE.name())
                         .requestMatchers("/api/certificates/verify").hasAuthority(Permission.VERIFY_CERTIFICATE.name())
 
                         // Swagger UI and API docs
