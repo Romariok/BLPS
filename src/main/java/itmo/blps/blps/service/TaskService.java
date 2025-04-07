@@ -59,6 +59,15 @@ public class TaskService {
                                 .orElseThrow(() -> new TaskOperationException(
                                                 "USER_NOT_FOUND",
                                                 "User not found"));
+                
+                // Check if the user is enrolled in the course that contains this task
+                boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
+                
+                if (!isEnrolled) {
+                        throw new TaskOperationException(
+                                "NOT_ENROLLED",
+                                "User is not enrolled in the course that contains this task");
+                }
 
                 if (answer == null || answer.trim().isEmpty()) {
                         throw new InvalidAnswerException(
@@ -97,7 +106,21 @@ public class TaskService {
                                 null);
         }
 
-        public List<UnscoredSubmissionDTO> getUnscoredSubmissions(Long taskId) {
+        public List<UnscoredSubmissionDTO> getUnscoredSubmissions(Long teacherId, Long taskId) {
+                Task task = taskRepository.findById(taskId)
+                                .orElseThrow(() -> new TaskOperationException(
+                                                "TASK_NOT_FOUND",
+                                                "Task not found"));
+                
+                // Check if the teacher is assigned to the course that contains this task
+                boolean isAssigned = userCourseRoleRepository.existsByUserIdAndCourseId(teacherId, task.getCourse().getId());
+                
+                if (!isAssigned) {
+                        throw new TaskOperationException(
+                                "NOT_ASSIGNED_TO_COURSE",
+                                "Teacher is not assigned to the course that contains this task");
+                }
+                
                 return submissionRepository.findByTaskIdAndAutomaticallyGradedFalseAndGradedAtIsNull(taskId)
                                 .stream()
                                 .map(taskMapper::toUnscoredSubmissionDTO)
@@ -122,6 +145,15 @@ public class TaskService {
                                 "UNAUTHORIZED_ROLE",
                                 "Only teachers can score submissions");
                 }
+                
+                // Check if the teacher is assigned to the course that contains this task
+                boolean isAssigned = userCourseRoleRepository.existsByUserIdAndCourseId(teacherId, submission.getTask().getCourse().getId());
+                
+                if (!isAssigned) {
+                        throw new TaskOperationException(
+                                "NOT_ASSIGNED_TO_COURSE",
+                                "Teacher is not assigned to the course that contains this task");
+                }
 
                 if (scoreDTO.getScore() > submission.getTask().getMaxScore()) {
                         throw new TaskOperationException(
@@ -143,6 +175,20 @@ public class TaskService {
         }
 
         public List<TaskSubmissionResponseDTO> getStudentSubmissions(Long userId, Long taskId) {
+                Task task = taskRepository.findById(taskId)
+                                .orElseThrow(() -> new TaskOperationException(
+                                                "TASK_NOT_FOUND",
+                                                "Task not found"));
+                
+                // Check if the user is enrolled in the course that contains this task
+                boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
+                
+                if (!isEnrolled) {
+                        throw new TaskOperationException(
+                                "NOT_ENROLLED",
+                                "User is not enrolled in the course that contains this task");
+                }
+                
                 return submissionRepository.findByStudentIdAndTaskId(userId, taskId)
                                 .stream()
                                 .map(submission -> new TaskSubmissionResponseDTO(

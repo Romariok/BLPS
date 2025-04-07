@@ -77,7 +77,10 @@ public class TaskController {
         public ResponseEntity<List<UnscoredSubmissionDTO>> getUnscoredSubmissions(
                         @Parameter(description = "ID задания") @PathVariable Long taskId)
                         throws TaskOperationException {
-                return ResponseEntity.ok(taskService.getUnscoredSubmissions(taskId));
+                // Get the current teacher ID from security context
+                Long currentTeacherId = securityUtils.getCurrentUserId();
+                
+                return ResponseEntity.ok(taskService.getUnscoredSubmissions(currentTeacherId, taskId));
         }
 
         @Operation(summary = "Оценить ответ студента", description = "Позволяет текущему преподавателю оценить ответ студента на задание")
