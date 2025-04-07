@@ -12,6 +12,7 @@ import itmo.blps.blps.model.*;
 import itmo.blps.blps.repository.TaskRepository;
 import itmo.blps.blps.repository.TaskSubmissionRepository;
 import itmo.blps.blps.repository.UserRepository;
+import itmo.blps.blps.repository.UserCourseRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +27,25 @@ public class TaskService {
         private final TaskSubmissionRepository submissionRepository;
         private final UserRepository userRepository;
         private final TaskMapper taskMapper;
+        private final UserCourseRoleRepository userCourseRoleRepository;
 
-        public TaskDTO getTaskById(Long taskId) {
+        public TaskDTO getTaskById(Long userId, Long taskId) {
+                
                 Task task = taskRepository.findById(taskId)
                                 .orElseThrow(() -> new TaskOperationException(
                                                 "TASK_NOT_FOUND",
                                                 "Task not found"));
+                
+                // Check if the user is enrolled in the course that contains this task
+                boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
+                
+                if (!isEnrolled) {
+                        throw new TaskOperationException(
+                                "NOT_ENROLLED",
+                                "User is not enrolled in the course that contains this task");
+                }
 
-                return TaskMapper.INSTANCE.taskToTaskDTO(task);
+                return taskMapper.taskToTaskDTO(task);
         }
 
         @Transactional

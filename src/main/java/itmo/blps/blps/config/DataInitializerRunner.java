@@ -57,11 +57,11 @@ public class DataInitializerRunner {
     @Transactional
     public void loadTestData() {
         try {
-            // Create users
-            User student1 = createUser("student1");
-            User student2 = createUser("student2");
-            User teacher1 = createUser("teacher1");
-            createUser("admin"); // Create admin user but don't need to assign roles yet
+            // Create users with roles
+            User student1 = createUser("student1", Role.STUDENT);
+            User student2 = createUser("student2", Role.STUDENT);
+            User teacher1 = createUser("teacher1", Role.TEACHER);
+            createUser("admin", Role.TEACHER); // Create admin user but don't need to assign roles yet
 
             // Create courses
             Course javaCourse = createCourse(
@@ -82,13 +82,13 @@ public class DataInitializerRunner {
                     false,
                     80);
 
-            // Assign course roles
-            assignRole(student1, javaCourse, Role.STUDENT);
-            assignRole(student1, webCourse, Role.STUDENT);
-            assignRole(student2, javaCourse, Role.STUDENT);
-            assignRole(teacher1, javaCourse, Role.TEACHER);
-            assignRole(teacher1, webCourse, Role.TEACHER);
-            assignRole(teacher1, dataScienceCourse, Role.TEACHER);
+            // Associate users with courses
+            associateUserWithCourse(student1, javaCourse);
+            associateUserWithCourse(student1, webCourse);
+            associateUserWithCourse(student2, javaCourse);
+            associateUserWithCourse(teacher1, javaCourse);
+            associateUserWithCourse(teacher1, webCourse);
+            associateUserWithCourse(teacher1, dataScienceCourse);
 
             // Create tasks for Java course
             Task javaVariablesTask = createTask(
@@ -245,12 +245,13 @@ public class DataInitializerRunner {
         }
     }
 
-    private User createUser(String username) {
+    private User createUser(String username, Role role) {
         return userRepository.findByUsername(username)
                 .orElseGet(() -> {
                     User user = new User();
                     user.setUsername(username);
                     user.setPassword(passwordEncoder.encode("password"));
+                    user.setRole(role);
                     return userRepository.save(user);
                 });
     }
@@ -271,7 +272,7 @@ public class DataInitializerRunner {
         return courseRepository.save(course);
     }
 
-    private void assignRole(User user, Course course, Role role) {
+    private void associateUserWithCourse(User user, Course course) {
         if (userCourseRoleRepository.existsByUserIdAndCourseId(user.getId(), course.getId())) {
             return;
         }
@@ -279,7 +280,6 @@ public class DataInitializerRunner {
         UserCourseRole userCourseRole = new UserCourseRole();
         userCourseRole.setUser(user);
         userCourseRole.setCourse(course);
-        userCourseRole.setRole(role);
         userCourseRoleRepository.save(userCourseRole);
     }
 

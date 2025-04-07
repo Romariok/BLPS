@@ -3,7 +3,6 @@ package itmo.blps.blps.service;
 import itmo.blps.blps.model.Permission;
 import itmo.blps.blps.model.Role;
 import itmo.blps.blps.model.User;
-import itmo.blps.blps.model.UserCourseRole;
 import itmo.blps.blps.repository.RolePermissionRepository;
 import itmo.blps.blps.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,15 +31,10 @@ public class UserService implements UserDetailsService {
         // Initialize roles set
         Set<Role> roles = new HashSet<>();
 
-        // Get all roles associated with the user from their courses if they exist
-        if (user.getCourseRoles() != null) {
-            roles.addAll(user.getCourseRoles().stream()
-                    .map(UserCourseRole::getRole)
-                    .collect(Collectors.toSet()));
+        // Add the user's role if it exists
+        if (user.getRole() != null) {
+            roles.add(user.getRole());
         }
-
-        // Always add STUDENT role for authenticated users
-        roles.add(Role.STUDENT);
 
         // Collect all permissions for all roles
         Set<Permission> permissions = new HashSet<>();

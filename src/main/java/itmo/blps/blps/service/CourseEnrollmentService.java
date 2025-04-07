@@ -57,10 +57,16 @@ public class CourseEnrollmentService {
                                         "This course is currently not available for enrollment");
                 }
 
+                // Check if user has STUDENT role
+                if (user.getRole() != Role.STUDENT) {
+                        throw new CourseEnrollmentException(
+                                "INVALID_ROLE",
+                                "Only students can enroll in courses");
+                }
+
                 UserCourseRole enrollment = new UserCourseRole();
                 enrollment.setUser(user);
                 enrollment.setCourse(course);
-                enrollment.setRole(Role.STUDENT);
                 userCourseRoleRepository.save(enrollment);
         }
 
