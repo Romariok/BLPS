@@ -306,7 +306,7 @@ public class DataInitializerRunner {
             course.setCurrentStudents(course.getCurrentStudents() + 1);
             courseRepository.save(course);
         }
-        
+
         userCourseRoleRepository.save(userCourseRole);
     }
 

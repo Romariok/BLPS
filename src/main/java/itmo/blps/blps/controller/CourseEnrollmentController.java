@@ -38,7 +38,7 @@ public class CourseEnrollmentController {
             throws TaskOperationException {
         // Get the current user ID from security context
         Long currentUserId = securityUtils.getCurrentUserId();
-        
+
         courseEnrollmentService.checkCourseAvailability(request.getCourseId());
         courseEnrollmentService.enrollInCourse(currentUserId, request.getCourseId());
         return ResponseEntity.ok(new EnrollmentResponseDTO(true, "Successfully enrolled in course"));
