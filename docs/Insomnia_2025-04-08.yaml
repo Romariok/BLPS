@@ -1,0 +1,1688 @@
+type: collection.insomnia.rest/5.0
+name: BLPS lab1
+meta:
+  id: wrk_b87015e768ff4ae2a3ac5aee0e186765
+  created: 1740493580207
+  modified: 1744114198715
+collection:
+  - name: Сертификаты
+    meta:
+      id: fld_56f02f971ae94cdebed93b6449bdf625
+      created: 1740493912472
+      modified: 1744114198669
+      sortKey: -1740493912472
+      description: API для управления сертификатами курсов
+    children:
+      - url: "{{ _.base_url }}/api/certificates/request"
+        name: Запрос на выдачу сертификата (teacher3)
+        meta:
+          id: req_fa1856483c6042689bfb4f56dbaee8b9
+          created: 1740493912480
+          modified: 1744114198713
+          isPrivate: false
+          description: Создает запрос на получение сертификата для указанного пользователя
+            и курса
+          sortKey: -1740493912483
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "courseId": 1
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+            insomnia.test('Status code is 400', () => {
+                insomnia.expect(response.code).to.equal(400);
+            });
+
+
+            insomnia.test('Response is a JSON object', () => {
+                insomnia.expect(body).to.be.an('object');
+            });
+
+
+            insomnia.test('Response has all required fields', () => {
+                insomnia.expect(body).to.have.all.keys('success', 'message', 'score');
+            });
+
+
+            insomnia.test('Success is false', () => {
+                insomnia.expect(body.success).to.be.equal(false);
+            });
+
+
+            insomnia.test('Message indicates incomplete course', () => {
+                insomnia.expect(body.message).to.equal('Not all tasks are completed with passing score');
+            });
+
+
+            insomnia.test('Score is null', () => {
+                insomnia.expect(body.score).to.be.equal(null);
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                insomnia.expect(body.success).to.be.a('boolean');
+                insomnia.expect(body.message).to.be.a('string');
+                insomnia.expect(body.score).to.be.equal(null);
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/certificates/process"
+        name: Обработка запроса на сертификат
+        meta:
+          id: req_130ca590ee5e459cb6bc1c28d577690b
+          created: 1740493912481
+          modified: 1744114198678
+          isPrivate: false
+          description: Позволяет одобрить или отклонить запрос на выдачу сертификата
+          sortKey: -1740493912481
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "requestId": 2,
+              "approved": true
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is a JSON object', () => {
+                insomnia.expect(body).to.be.an('object');
+            });
+
+
+            insomnia.test('Response has all required fields', () => {
+                insomnia.expect(body).to.have.all.keys('success', 'message', 'status');
+            });
+
+
+            insomnia.test('Success is true', () => {
+                insomnia.expect(body.success).to.be.equal(true);
+            });
+
+
+            insomnia.test('Message indicates approval', () => {
+                insomnia.expect(body.message).to.equal('Certificate request approved');
+            });
+
+
+            insomnia.test('Status is APPROVED', () => {
+                insomnia.expect(body.status).to.equal('APPROVED');
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                insomnia.expect(body.success).to.be.a('boolean');
+                insomnia.expect(body.message).to.be.a('string');
+                insomnia.expect(body.status).to.be.a('string');
+            });
+
+
+            insomnia.test('Status is a valid CertificateRequestStatus', () => {
+                const validStatuses = ['IN_PROGRESS', 'APPROVED', 'REJECTED', 'CANCELLED'];
+                insomnia.expect(validStatuses).to.include(body.status);
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/certificates/status/1"
+        name: Проверка статуса запроса на сертификат (student2)
+        meta:
+          id: req_da43c3986b6d4623b2cec33754e2a608
+          created: 1740493912485
+          modified: 1744114198711
+          isPrivate: false
+          description: Возвращает текущий статус запроса на сертификат
+          sortKey: -1740493912485
+        method: GET
+        parameters:
+          - disabled: false
+            id: pair_39235c1745b64681a65703570c3fbdd0
+        authentication:
+          token: "{{auth_token2}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            /*const body = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is a JSON object', () => {
+                insomnia.expect(body).to.be.an('object');
+            });
+
+
+            insomnia.test('Response has all required fields', () => {
+                insomnia.expect(body).to.have.all.keys('success', 'message', 'status');
+            });
+
+
+            insomnia.test('Success is true', () => {
+                insomnia.expect(body.success).to.be.equal(true);
+            });
+
+
+            insomnia.test('Message indicates status retrieval', () => {
+                insomnia.expect(body.message).to.equal('Certificate request status retrieved');
+            });
+
+
+            insomnia.test('Status is IN_PROGRESS', () => {
+                insomnia.expect(body.status).to.equal('IN_PROGRESS');
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                insomnia.expect(body.success).to.be.a('boolean');
+                insomnia.expect(body.message).to.be.a('string');
+                insomnia.expect(body.status).to.be.a('string');
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });*/
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/certificates/course/1/pending"
+        name: Получение списка ожидающих запросов на сертификаты
+        meta:
+          id: req_3f032b3a3dfb468d9e2431a2f4aa6459
+          created: 1740493912486
+          modified: 1744114198692
+          isPrivate: false
+          description: Возвращает список необработанных запросов на сертификаты для
+            указанного курса
+          sortKey: -1740493912486
+        method: GET
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const requests = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is an array', () => {
+                insomnia.expect(Array.isArray(requests)).to.be.equal(true);
+            });
+
+
+            insomnia.test('Response contains exactly 2 requests', () => {
+                insomnia.expect(requests).to.have.lengthOf(2);
+            });
+
+
+            insomnia.test('Requests have all required fields', () => {
+                requests.forEach(request => {
+                    insomnia.expect(request).to.have.all.keys(
+                        'requestId',
+                        'studentId',
+                        'studentUsername',
+                        'courseId',
+                        'courseName',
+                        'status'
+                    );
+                });
+            });
+
+
+            insomnia.test('First request data is correct', () => {
+                const firstRequest = requests[0];
+                insomnia.expect(firstRequest.requestId).to.equal(1);
+                insomnia.expect(firstRequest.studentId).to.equal(1);
+                insomnia.expect(firstRequest.studentUsername).to.equal('student1');
+                insomnia.expect(firstRequest.courseId).to.equal(1);
+                insomnia.expect(firstRequest.courseName).to.equal('Java Programming Basics');
+                insomnia.expect(firstRequest.status).to.equal('IN_PROGRESS');
+            });
+
+
+            insomnia.test('Second request data is correct', () => {
+                const secondRequest = requests[1];
+                insomnia.expect(secondRequest.requestId).to.equal(2);
+                insomnia.expect(secondRequest.studentId).to.equal(2);
+                insomnia.expect(secondRequest.studentUsername).to.equal('student2');
+                insomnia.expect(secondRequest.courseId).to.equal(1);
+                insomnia.expect(secondRequest.courseName).to.equal('Java Programming Basics');
+                insomnia.expect(secondRequest.status).to.equal('IN_PROGRESS');
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                requests.forEach(request => {
+                    insomnia.expect(request.requestId).to.be.a('number');
+                    insomnia.expect(request.studentId).to.be.a('number');
+                    insomnia.expect(request.studentUsername).to.be.a('string');
+                    insomnia.expect(request.courseId).to.be.a('number');
+                    insomnia.expect(request.courseName).to.be.a('string');
+                    insomnia.expect(request.status).to.be.a('string');
+                });
+            });
+
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/certificates/course/1/pending"
+        name: Получение списка ожидающих запросов на сертификаты (после обработки
+          запроса на сертификат)
+        meta:
+          id: req_60c7ff0f9c794cd481d192949e648a0d
+          created: 1740572906639
+          modified: 1744114198697
+          isPrivate: false
+          description: Возвращает список необработанных запросов на сертификаты для
+            указанного курса
+          sortKey: -1740493912381
+        method: GET
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const requests = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is an array', () => {
+                insomnia.expect(Array.isArray(requests)).to.be.equal(true);
+            });
+
+
+            insomnia.test('Response contains exactly 2 requests', () => {
+                insomnia.expect(requests).to.have.lengthOf(1);
+            });
+
+
+            insomnia.test('Requests have all required fields', () => {
+                requests.forEach(request => {
+                    insomnia.expect(request).to.have.all.keys(
+                        'requestId',
+                        'studentId',
+                        'studentUsername',
+                        'courseId',
+                        'courseName',
+                        'status'
+                    );
+                });
+            });
+
+
+            insomnia.test('First request data is correct', () => {
+                const firstRequest = requests[0];
+                insomnia.expect(firstRequest.requestId).to.equal(1);
+                insomnia.expect(firstRequest.studentId).to.equal(1);
+                insomnia.expect(firstRequest.studentUsername).to.equal('student1');
+                insomnia.expect(firstRequest.courseId).to.equal(1);
+                insomnia.expect(firstRequest.courseName).to.equal('Java Programming Basics');
+                insomnia.expect(firstRequest.status).to.equal('IN_PROGRESS');
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                requests.forEach(request => {
+                    insomnia.expect(request.requestId).to.be.a('number');
+                    insomnia.expect(request.studentId).to.be.a('number');
+                    insomnia.expect(request.studentUsername).to.be.a('string');
+                    insomnia.expect(request.courseId).to.be.a('number');
+                    insomnia.expect(request.courseName).to.be.a('string');
+                    insomnia.expect(request.status).to.be.a('string');
+                });
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Запись на курсы
+    meta:
+      id: fld_6beca7c019d645cbb04de53984fd1453
+      created: 1740493912474
+      modified: 1744130655562
+      sortKey: -1740493912575
+      description: API для управления записью студентов на курсы
+    children:
+      - url: "{{ _.base_url }}/api/courses/enroll"
+        name: Записаться на курс (но мы уже были записаны) student 1
+        meta:
+          id: req_67e29fec8a0a45fc82c5ef69985946c3
+          created: 1740493912479
+          modified: 1744129803697
+          isPrivate: false
+          description: Позволяет пользователю записаться на доступный курс
+          sortKey: -1740493912479
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "courseId": 1
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token1}}"
+          type: bearer
+        scripts:
+          afterResponse: >+
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+            insomnia.test('Status code is 400', () => {
+              insomnia.expect(response.code).to.equal(400);
+            });
+
+
+            insomnia.test('Response has success property set to true', () => {
+              insomnia.expect(body.success).to.equal(false);
+            });
+
+
+            insomnia.test('Response contains success message', () => {
+              insomnia.expect(body.message).to.equal('User is already enrolled in this course');
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(1000);
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/courses/enroll"
+        name: Записаться на курс (student2)
+        meta:
+          id: req_20e5ea674e81477a9d394524dc030ebb
+          created: 1740507738680
+          modified: 1744128353849
+          isPrivate: false
+          description: Позволяет пользователю записаться на доступный курс
+          sortKey: -1740493912478.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "courseId": 2
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{ _.auth_token2 }}"
+          type: bearer
+        scripts:
+          afterResponse: >+
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+              insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response has success property set to true', () => {
+              insomnia.expect(body.success).to.equal(true);
+            });
+
+
+            insomnia.test('Response contains success message', () => {
+              insomnia.expect(body.message).to.equal('Successfully enrolled in course');
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(500);
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/courses/enroll"
+        name: Записаться на курс (но курса не существует)
+        meta:
+          id: req_b4b8512752ba46cf8dfb1e53cb693521
+          created: 1740507955585
+          modified: 1744114198708
+          isPrivate: false
+          description: Позволяет пользователю записаться на доступный курс
+          sortKey: -1740493912478.25
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "courseId": 10
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token2}}"
+          type: bearer
+        scripts:
+          afterResponse: >+
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+            insomnia.test('Status code is 400', () => {
+              insomnia.expect(response.code).to.equal(400);
+            });
+
+
+            insomnia.test('Response has success property set to true', () => {
+              insomnia.expect(body.success).to.equal(false);
+            });
+
+
+            insomnia.test('Response contains success message', () => {
+              insomnia.expect(body.message).to.equal('The requested course does not exist');
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(500);
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/courses/enroll"
+        name: Записаться на курс (но курс закрыт)
+        meta:
+          id: req_ec50114b01dc4e1ebcda4ccd3b52b068
+          created: 1740508049966
+          modified: 1744114198712
+          isPrivate: false
+          description: Позволяет пользователю записаться на доступный курс
+          sortKey: -1740493912478.0625
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "courseId": 3
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token2}}"
+          type: bearer
+        scripts:
+          afterResponse: >+
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+            insomnia.test('Status code is 400', () => {
+              insomnia.expect(response.code).to.equal(400);
+            });
+
+
+            insomnia.test('Response has success property set to true', () => {
+              insomnia.expect(body.success).to.equal(false);
+            });
+
+
+            insomnia.test('Response contains success message', () => {
+              insomnia.expect(body.message).to.equal('This course is currently not available for enrollment');
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(500);
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Задания
+    meta:
+      id: fld_e6ceb2f5fb14431d94d94cd5112f0885
+      created: 1740493912475
+      modified: 1744123116212
+      sortKey: -1740493912475
+      description: API для работы с заданиями курса
+    children:
+      - url: "{{ _.base_url }}/api/tasks/submit"
+        name: Отправить ответ на задание (student2)
+        meta:
+          id: req_8af26b5f8dc94e07ad33f78235d9ee7e
+          created: 1740493912476
+          modified: 1744114198701
+          isPrivate: false
+          description: Позволяет студенту отправить ответ на задание
+          sortKey: -1740493912477.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "taskId": 3,
+              "userId": 2,
+              "answer": "baza"
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token2}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is a JSON object', () => {
+                insomnia.expect(body).to.be.an('object');
+            });
+
+
+            insomnia.test('Response has all required fields', () => {
+                insomnia.expect(body).to.have.all.keys('success', 'message', 'score');
+            });
+
+
+            insomnia.test('Success is true', () => {
+                insomnia.expect(body.success).to.be.equal(true);
+            });
+
+
+            insomnia.test('Message indicates waiting for review', () => {
+                insomnia.expect(body.message).to.equal('Task submitted successfully. Waiting for teacher\'s review.');
+            });
+
+
+            insomnia.test('Score is null for written tasks', () => {
+                insomnia.expect(body.score).to.be.equal(null);
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                insomnia.expect(body.success).to.be.a('boolean');
+                insomnia.expect(body.message).to.be.a('string');
+                insomnia.expect(body.score).to.be.equal(null)
+            });
+
+
+
+            // Test response time
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/score"
+        name: Оценить ответ студента
+        meta:
+          id: req_391711b0cdf44938bc52006b2e375c1c
+          created: 1740493912478
+          modified: 1744114198690
+          isPrivate: false
+          description: Позволяет преподавателю оценить ответ студента на задание
+          sortKey: -1740493912478
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "submissionId": 6,
+              "score": 3
+            }
+        parameters:
+          - disabled: false
+            id: pair_b690ebb1e1984cf1bbda3ac754b68337
+            name: teacherId
+            value: "1"
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: |+
+            const response = insomnia.response;
+
+            insomnia.test('Status code is 200', () => {
+              insomnia.expect(response.code).to.equal(200);
+            });
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(500);
+            });
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/1"
+        name: Получить задание по ID
+        meta:
+          id: req_0ab02f2d9d6c4118900e403b8a7c3a89
+          created: 1740493912482
+          modified: 1744114198675
+          isPrivate: false
+          description: Возвращает информацию о задании по указанному ID
+          sortKey: -1740493912482
+        method: GET
+        authentication:
+          token: "{{auth_token1}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const task = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is an object', () => {
+                insomnia.expect(task).to.be.an('object');
+            });
+
+
+            insomnia.test('Task has all required fields', () => {
+                insomnia.expect(task).to.have.all.keys(
+                    'id',
+                    'title',
+                    'description',
+                    'type',
+                    'maxScore'
+                );
+            });
+
+
+            insomnia.test('Task data is correct', () => {
+                insomnia.expect(task.id).to.equal(1);
+                insomnia.expect(task.title).to.equal('Java Variables Quiz');
+                insomnia.expect(task.description).to.equal('Select the correct data type for storing decimal numbers');
+                insomnia.expect(task.type).to.equal('MULTIPLE_CHOICE');
+                insomnia.expect(task.maxScore).to.equal(10);
+            });
+
+
+            insomnia.test('Task fields have correct data types', () => {
+                insomnia.expect(task.id).to.be.a('number');
+                insomnia.expect(task.title).to.be.a('string');
+                insomnia.expect(task.description).to.be.a('string');
+                insomnia.expect(task.type).to.be.a('string');
+                insomnia.expect(task.maxScore).to.be.a('number');
+            });
+
+
+            insomnia.test('ID is a positive number', () => {
+                insomnia.expect(task.id).to.be.above(0);
+            });
+
+
+            insomnia.test('Max score is a positive number', () => {
+                insomnia.expect(task.maxScore).to.be.above(0);
+            });
+
+
+            insomnia.test('String fields are not empty', () => {
+                insomnia.expect(task.title.length).to.be.above(0);
+                insomnia.expect(task.description.length).to.be.above(0);
+            });
+
+
+            insomnia.test('Task type is valid', () => {
+                insomnia.expect(task.type).to.be.oneOf([
+                    'MULTIPLE_CHOICE',
+                    'CHECKBOX',
+                    'WRITTEN'
+                ]);
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500); 
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/3/unscored"
+        name: Получить неоцененные ответы
+        meta:
+          id: req_39122f462e02458c8484272b37fb3722
+          created: 1740493912483
+          modified: 1744114198687
+          isPrivate: false
+          description: Возвращает список неоцененных ответов студентов на задание
+          sortKey: -1740493912483
+        method: GET
+        parameters:
+          - disabled: false
+            id: pair_d6d3da56cb7a46c9be171964f6fc88dd
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is an array', () => {
+                insomnia.expect(Array.isArray(body)).to.equal(true);
+            });
+
+
+            insomnia.test('Response contains exactly 1 submission', () => {
+                insomnia.expect(body).to.have.lengthOf(1);
+            });
+
+
+            insomnia.test('Submissions have all required fields', () => {
+                body.forEach(submission => {
+                    insomnia.expect(submission).to.have.all.keys(
+                        'submissionId',
+                        'taskId',
+                        'studentId',
+                        'studentUsername',
+                        'answer',
+                        'maxScore'
+                    );
+                });
+            });
+
+
+            insomnia.test('Submission data is correct', () => {
+                const secondSubmission = body[0];
+                insomnia.expect(secondSubmission.submissionId).to.equal(6);
+                insomnia.expect(secondSubmission.taskId).to.equal(3);
+                insomnia.expect(secondSubmission.studentId).to.equal(2);
+                insomnia.expect(secondSubmission.studentUsername).to.equal('student2');
+                insomnia.expect(secondSubmission.answer).to.equal(
+                    'OOP is a programming paradigm that uses objects and classes.'
+                );
+                insomnia.expect(secondSubmission.maxScore).to.equal(25);
+            });
+
+
+            insomnia.test('Submission fields have correct data types', () => {
+                body.forEach(submission => {
+                    insomnia.expect(submission.submissionId).to.be.a('number');
+                    insomnia.expect(submission.taskId).to.be.a('number');
+                    insomnia.expect(submission.studentId).to.be.a('number');
+                    insomnia.expect(submission.studentUsername).to.be.a('string');
+                    insomnia.expect(submission.answer).to.be.a('string');
+                    insomnia.expect(submission.maxScore).to.be.a('number');
+                });
+            });
+
+
+            insomnia.test('Submission IDs are positive numbers', () => {
+                body.forEach(submission => {
+                    insomnia.expect(submission.submissionId).to.be.above(0);
+                });
+            });
+
+
+            insomnia.test('Max scores are positive numbers', () => {
+                body.forEach(submission => {
+                    insomnia.expect(submission.maxScore).to.be.above(0);
+                });
+            });
+
+
+            insomnia.test('Answers are not empty', () => {
+                body.forEach(submission => {
+                    insomnia.expect(submission.answer.length).to.be.above(0);
+                });
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/1/submissions"
+        name: Получить ответы студента 1
+        meta:
+          id: req_37237118a3954dd99b9191ec6129577d
+          created: 1740493912484
+          modified: 1744114198683
+          isPrivate: false
+          description: Возвращает список ответов конкретного студента на задание
+          sortKey: -1740493912483.5
+        method: GET
+        parameters:
+          - disabled: false
+            id: pair_03625e795a204cbb9061f82e76af4c12
+            name: userId
+            value: "1"
+        authentication:
+          token: "{{auth_token1}}"
+          type: bearer
+        scripts:
+          afterResponse: |
+            const response = insomnia.response;
+            const body = response.json();
+
+            insomnia.test('Status code is 200', () => {
+              insomnia.expect(response.code).to.equal(200);
+            });
+
+            insomnia.test('Response has success property set to true', () => {
+              insomnia.expect(body[0].success).to.equal(true);
+            });
+
+            insomnia.test('Response contains success message', () => {
+              insomnia.expect(body[0].message).to.equal('Submission graded');
+            });
+
+            insomnia.test('Score count', ()=>{
+            	insomnia.expect(body[0].score).to.equal(10);
+            });
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/3/unscored"
+        name: Получить неоцененные ответы (после оценки)
+        meta:
+          id: req_b3441c3948934732aa95e23a384de149
+          created: 1740567133106
+          modified: 1744114198705
+          isPrivate: false
+          description: Возвращает список неоцененных ответов студентов на задание
+          sortKey: -1740493912477
+        method: GET
+        parameters:
+          - disabled: false
+            id: pair_d6d3da56cb7a46c9be171964f6fc88dd
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const submissions = response.json();
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(200);
+            });
+
+
+            insomnia.test('Response is an array', () => {
+                insomnia.expect(Array.isArray(submissions)).to.be.equal(true);
+            });
+
+
+            insomnia.test('Response contains exactly 1 submission', () => {
+                insomnia.expect(submissions).to.have.lengthOf(1);
+            });
+
+
+            const submission = submissions[0];
+
+            insomnia.test('Submission has all required fields', () => {
+                insomnia.expect(submission).to.have.all.keys(
+                    'submissionId',
+                    'taskId',
+                    'studentId',
+                    'studentUsername',
+                    'answer',
+                    'maxScore'
+                );
+            });
+
+
+            insomnia.test('Submission data is correct', () => {
+                insomnia.expect(submission.submissionId).to.equal(7);
+                insomnia.expect(submission.taskId).to.equal(3);
+                insomnia.expect(submission.studentId).to.equal(2);
+                insomnia.expect(submission.studentUsername).to.equal('student2');
+                insomnia.expect(submission.answer).to.equal('baza');
+                insomnia.expect(submission.maxScore).to.equal(25);
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                insomnia.expect(submission.submissionId).to.be.a('number');
+                insomnia.expect(submission.taskId).to.be.a('number');
+                insomnia.expect(submission.studentId).to.be.a('number');
+                insomnia.expect(submission.studentUsername).to.be.a('string');
+                insomnia.expect(submission.answer).to.be.a('string');
+                insomnia.expect(submission.maxScore).to.be.a('number');
+            });
+
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/submit"
+        name: Отправить ответ на задание (ответ пустой)
+        meta:
+          id: req_5c198e7e7c9f487c9055359f9a544f9a
+          created: 1741791359130
+          modified: 1744114198694
+          isPrivate: false
+          description: Позволяет студенту отправить ответ на задание
+          sortKey: -1740493912477.25
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "taskId": 3,
+              "userId": 2,
+              "answer": ""
+            }
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token2}}"
+          type: bearer
+        scripts:
+          afterResponse: >-
+            const response = insomnia.response;
+
+            const body = response.json();
+
+
+
+            insomnia.test('Status code is 200', () => {
+                insomnia.expect(response.code).to.equal(400);
+            });
+
+
+            insomnia.test('Response is a JSON object', () => {
+                insomnia.expect(body).to.be.an('object');
+            });
+
+
+            insomnia.test('Response has all required fields', () => {
+                insomnia.expect(body).to.have.all.keys('success', 'message', 'score');
+            });
+
+
+            insomnia.test('Success is true', () => {
+                insomnia.expect(body.success).to.be.equal(false);
+            });
+
+
+            insomnia.test('Message indicates waiting for review', () => {
+                insomnia.expect(body.message).to.equal('Answer cannot be empty');
+            });
+
+
+            insomnia.test('Score is null for written tasks', () => {
+                insomnia.expect(body.score).to.be.equal(null);
+            });
+
+
+            insomnia.test('Fields have correct types', () => {
+                insomnia.expect(body.success).to.be.a('boolean');
+                insomnia.expect(body.message).to.be.a('string');
+                insomnia.expect(body.score).to.be.equal(null)
+            });
+
+
+
+            // Test response time
+
+            insomnia.test('Response time is reasonable', () => {
+                insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/score"
+        name: Оценить ответ студента (отрицательная оценка)
+        meta:
+          id: req_38f6359cbf1d4a969a9c9daafe573fbb
+          created: 1741792816470
+          modified: 1744114198685
+          isPrivate: false
+          description: Позволяет преподавателю оценить ответ студента на задание
+          sortKey: -1740493912480
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "submissionId": 6,
+              "score": -3
+            }
+        parameters:
+          - disabled: false
+            id: pair_b690ebb1e1984cf1bbda3ac754b68337
+            name: teacherId
+            value: "1"
+        headers:
+          - disabled: false
+            name: Content-Type
+            value: application/json
+        authentication:
+          token: "{{auth_token3}}"
+          type: bearer
+        scripts:
+          afterResponse: |+
+            const response = insomnia.response;
+            const body = response.json();
+
+            insomnia.test('Status code is 200', () => {
+              insomnia.expect(response.code).to.equal(400);
+            });
+
+            insomnia.test('Error message is valid', ()=>{
+            	insomnia.expect(body.message).to.equal("Score cannot be negative");
+            });
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(500);
+            });
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/tasks/1/submissions"
+        name: Получить ответы студента 2
+        meta:
+          id: req_c04c13b42805495d83eb0b67a35c77bb
+          created: 1744046535751
+          modified: 1744114198710
+          isPrivate: false
+          description: Возвращает список ответов конкретного студента на задание
+          sortKey: -1740493912483.25
+        method: GET
+        parameters:
+          - disabled: false
+            id: pair_03625e795a204cbb9061f82e76af4c12
+            name: userId
+            value: "1"
+        authentication:
+          token: "{{auth_token2}}"
+          type: bearer
+        scripts:
+          afterResponse: |
+            const response = insomnia.response;
+            const body = response.json();
+
+            insomnia.test('Status code is 200', () => {
+              insomnia.expect(response.code).to.equal(200);
+            });
+
+            insomnia.test('Response has success property set to true', () => {
+              insomnia.expect(body[0].success).to.equal(true);
+            });
+
+            insomnia.test('Response contains success message', () => {
+              insomnia.expect(body[0].message).to.equal('Submission graded');
+            });
+
+            insomnia.test('Score count', ()=>{
+            	insomnia.expect(body[0].score).to.equal(5);
+            });
+
+            insomnia.test('Response time is reasonable', () => {
+              insomnia.expect(response.responseTime).to.be.below(500);
+            });
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Авторизация/Рега
+    meta:
+      id: fld_1b2b720cbb784fbdbd0029aa872edb8c
+      created: 1741796412574
+      modified: 1744132132070
+      sortKey: -1741796412775
+    children:
+      - url: "{{ _.base_url }}/api/auth/register"
+        name: Rega
+        meta:
+          id: req_bcf417443536446694588bae2afce932
+          created: 1741796415226
+          modified: 1744114255370
+          isPrivate: false
+          sortKey: -1743765232499
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username":"aboba",
+            	"password":"ch13193hfj"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/10.3.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/auth/login"
+        name: Auth as student1
+        meta:
+          id: req_8b082c4e0ccf41688e171b73b8b1c90d
+          created: 1743765232399
+          modified: 1744114198703
+          isPrivate: false
+          sortKey: -1743765232399
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "student1",
+            	"password": "password"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        scripts:
+          afterResponse: |
+            const response = insomnia.response;
+            const body = response.json();
+
+            if (response.code === 200 && body.token) {
+                insomnia.environment.set('auth_token', body.token);
+            		insomnia.environment.set('auth_token1', body.token);
+            } else {
+                throw new Error('Failed to authenticate: ' + body.message);
+            }
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/auth/login"
+        name: Auth as student2
+        meta:
+          id: req_19c1540e6d044d10ac2ae5494681998f
+          created: 1744045660854
+          modified: 1744114198680
+          isPrivate: false
+          sortKey: -1742129572442.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "student2",
+            	"password": "password"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        scripts:
+          afterResponse: |
+            const response = insomnia.response;
+            const body = response.json();
+
+            if (response.code === 200 && body.token) {
+                insomnia.environment.set('auth_token', body.token);
+            		insomnia.environment.set('auth_token2', body.token);
+            } else {
+                throw new Error('Failed to authenticate: ' + body.message);
+            }
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/auth/login"
+        name: Auth as teacher1
+        meta:
+          id: req_5d8593804c98435db5967a461b41ea1f
+          created: 1744045675303
+          modified: 1744114198695
+          isPrivate: false
+          sortKey: -1741311742464.25
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "teacher1",
+            	"password": "password"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.0.2
+        scripts:
+          afterResponse: |
+            const response = insomnia.response;
+            const body = response.json();
+
+            if (response.code === 200 && body.token) {
+                insomnia.environment.set('auth_token', body.token);
+            		insomnia.environment.set('auth_token3', body.token);
+            } else {
+                throw new Error('Failed to authenticate: ' + body.message);
+            }
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Проверка записи на курс с ограничением по местам
+    meta:
+      id: fld_e4f79a2a3dad4fa6a1201b78db208558
+      created: 1744131083696
+      modified: 1744131159863
+      sortKey: -1741796412675
+    children:
+      - url: "{{ _.base_url }}/api/courses/enroll"
+        name: (student1)
+        meta:
+          id: req_c0bd0724d5884625a935d8634507a239
+          created: 1744131105100
+          modified: 1744131283968
+          isPrivate: false
+          description: Позволяет пользователю записаться на доступный курс
+          sortKey: -1744131109481
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "courseId": 4
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_1f3b7a2f39754987a845ee99dda5dac0
+        authentication:
+          type: bearer
+          token: "{{auth_token1}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.base_url }}/api/courses/enroll"
+        name: (student2)
+        meta:
+          id: req_f319a84df2794127bda7eb81d828714a
+          created: 1744131117783
+          modified: 1744131279368
+          isPrivate: false
+          description: Позволяет пользователю записаться на доступный курс
+          sortKey: -1744131109381
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "courseId": 4
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+            id: pair_991b6ab53b86469d852d3a58f0988241
+        authentication:
+          type: bearer
+          token: "{{auth_token2}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_9fc972e4f279783c26803ec47a7ae2200dc88eea
+    created: 1744114199054
+    modified: 1744132132061
+environments:
+  name: Base Environment
+  meta:
+    id: env_9fc972e4f279783c26803ec47a7ae2200dc88eea
+    created: 1740493580210
+    modified: 1744132132064
+    isPrivate: false
+  data:
+    auth_token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyMSIsImF1dGhvcml0aWVzIjoiREVMRVRFX1RBU0ssRURJVF9DT1VSU0UsVklFV19DRVJUSUZJQ0FURSxDUkVBVEVfVEFTSyxHUkFERV9UQVNLLElTU1VFX0NFUlRJRklDQVRFLERFTEVURV9DT1VSU0UsVklFV19DT1VSU0UsVklFV19UQVNLLENSRUFURV9DT1VSU0UsRURJVF9UQVNLLFJPTEVfVEVBQ0hFUiIsImlhdCI6MTc0NDEzMjEzMiwiZXhwIjoxNzQ0MjE4NTMyfQ.ICQa-vXGk55KtcfWFijHu1dx8Nk2H_kCcvy6fhP1SFI
+    auth_token1: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHVkZW50MSIsImF1dGhvcml0aWVzIjoiUk9MRV9TVFVERU5ULFZJRVdfQ0VSVElGSUNBVEUsVklFV19DT1VSU0UsVklFV19UQVNLLFNVQk1JVF9UQVNLIiwiaWF0IjoxNzQ0MTMyMTI4LCJleHAiOjE3NDQyMTg1Mjh9.lvIYs9NwpMhmGEjgZD1TyS-kCxq_CphhkV8G-_STuok
+    auth_token2: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHVkZW50MiIsImF1dGhvcml0aWVzIjoiUk9MRV9TVFVERU5ULFZJRVdfQ0VSVElGSUNBVEUsVklFV19DT1VSU0UsVklFV19UQVNLLFNVQk1JVF9UQVNLIiwiaWF0IjoxNzQ0MTMyMTMwLCJleHAiOjE3NDQyMTg1MzB9.RtjNeayKfQSrTGGGx4u9eW6jcOCzqTJ4_0FHV7CpuGU
+    auth_token3: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZWFjaGVyMSIsImF1dGhvcml0aWVzIjoiREVMRVRFX1RBU0ssRURJVF9DT1VSU0UsVklFV19DRVJUSUZJQ0FURSxDUkVBVEVfVEFTSyxHUkFERV9UQVNLLElTU1VFX0NFUlRJRklDQVRFLERFTEVURV9DT1VSU0UsVklFV19DT1VSU0UsVklFV19UQVNLLENSRUFURV9DT1VSU0UsRURJVF9UQVNLLFJPTEVfVEVBQ0hFUiIsImlhdCI6MTc0NDEzMjEzMiwiZXhwIjoxNzQ0MjE4NTMyfQ.ICQa-vXGk55KtcfWFijHu1dx8Nk2H_kCcvy6fhP1SFI
+    base_url: http://localhost:8080
+  subEnvironments:
+    - name: OpenAPI env localhost:8080
+      meta:
+        id: env_045556f42aae4c2c8a22df803cf7589d
+        created: 1740493912470
+        modified: 1744114198662
+        isPrivate: false
+        sortKey: 1740493912470
+      data:
+        host: localhost:8000
+        scheme: http
