@@ -47,7 +47,7 @@ public class CourseEnrollmentService {
                 }
         }
 
-        @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
+        @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
         public void enrollInCourse(Long userId, Long courseId) {
                 // First check if the user is already enrolled
                 if (userCourseRoleRepository.existsByUserIdAndCourseId(userId, courseId)) {
@@ -111,7 +111,7 @@ public class CourseEnrollmentService {
                 userCourseRoleRepository.save(enrollment);
         }
 
-        @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
+        @Transactional
         public PaymentHistory processPayment(User user, Course course) {
                 log.info("Processing payment of {} for user {} for course {}",
                                 course.getPrice(), user.getUsername(), course.getTitle());
@@ -127,16 +127,15 @@ public class CourseEnrollmentService {
 
                 try {
                         if (random.nextInt(100) < 20) {
-                                payment.setStatus(PaymentStatus.FAILED);
-                                payment.setCompletedAt(LocalDateTime.now());
-                                paymentHistoryRepository.save(payment);
                                 log.warn("Payment rejected for user {} for course {}",
                                                 user.getUsername(), course.getTitle());
                                 throw new CourseEnrollmentException(
                                                 "PAYMENT_REJECTED",
                                                 "Payment rejected by the bank");
                         }
-
+                        payment.setStatus(PaymentStatus.SUCCESSFUL);
+                        payment.setCompletedAt(LocalDateTime.now());
+                        paymentHistoryRepository.save(payment);
                         log.info("Payment successfully processed for user {} for course {}",
                                         user.getUsername(), course.getTitle());
                 } catch (Exception e) {
@@ -148,7 +147,7 @@ public class CourseEnrollmentService {
                 return payment;
         }
 
-        @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
+        @Transactional
         public void refundPayment(PaymentHistory payment) {
                 User user = payment.getUser();
                 Course course = payment.getCourse();
