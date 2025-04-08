@@ -10,11 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Random;
 
 @Service
@@ -47,7 +44,7 @@ public class CourseEnrollmentService {
                 }
         }
 
-        @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
+        @Transactional
         public void enrollInCourse(Long userId, Long courseId) {
                 // First check if the user is already enrolled
                 if (userCourseRoleRepository.existsByUserIdAndCourseId(userId, courseId)) {
@@ -93,22 +90,43 @@ public class CourseEnrollmentService {
                 }
 
                 course = courseRepository.findById(courseId).orElseThrow();
-                if (course.getMaxStudents() != null && course.getCurrentStudents() >= course.getMaxStudents()) {
-                        if (payment != null) {
-                                refundPayment(payment);
-                        }
-                        throw new CourseEnrollmentException(
-                                        "COURSE_FULL",
-                                        "This course has reached its maximum capacity during payment processing");
-                }
 
-                course.setCurrentStudents(course.getCurrentStudents() + 1);
-                courseRepository.save(course);
+
+                // Check that increment was successful
+                int rowsAffected = courseRepository.incrementPlaceCount(courseId);
+                if (rowsAffected <= 0) {
+                    if (payment != null) {
+                        refundPayment(payment);
+                    }
+                    throw new CourseEnrollmentException(
+                            "UPDATE_FAILED",
+                            "Failed to increment course place count. Transaction will be rolled back.");
+                }
 
                 UserCourseRole enrollment = new UserCourseRole();
                 enrollment.setUser(user);
                 enrollment.setCourse(course);
                 userCourseRoleRepository.save(enrollment);
+        }
+        
+        @Transactional
+        public void disenrollFromCourse(Long userId, Long courseId) {
+                UserCourseRole enrollment = userCourseRoleRepository.findByUserIdAndCourseId(userId, courseId)
+                        .orElseThrow(() -> new CourseEnrollmentException(
+                                "NOT_ENROLLED",
+                                "User is not enrolled in this course"));
+                
+                userCourseRoleRepository.delete(enrollment);
+                
+                // Decrease course enrollment count atomically and check result
+                int rowsAffected = courseRepository.decrementPlaceCount(courseId);
+                if (rowsAffected <= 0) {
+                    log.warn("Failed to decrement place count for course {}", courseId);
+                    // We don't throw an exception here since the enrollment is already deleted
+                    // and we don't want to revert that operation
+                }
+                
+                log.info("User {} disenrolled from course {}", userId, courseId);
         }
 
         @Transactional
