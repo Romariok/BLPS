@@ -60,6 +60,7 @@ public class DataInitializerRunner {
             // Create users with roles
             User student1 = createUser("student1", Role.STUDENT);
             User student2 = createUser("student2", Role.STUDENT);
+            User student3 = createUser("student3", Role.STUDENT);
             User teacher1 = createUser("teacher1", Role.TEACHER);
             createUser("admin", Role.TEACHER); // Create admin user but don't need to assign roles yet
 
@@ -68,21 +69,37 @@ public class DataInitializerRunner {
                     "Java Programming Basics",
                     "Learn the fundamentals of Java programming language",
                     true,
-                    70);
+                    70,
+                    null,
+                    null);
 
             Course webCourse = createCourse(
                     "Advanced Web Development",
                     "Master modern web development techniques",
                     true,
-                    75);
+                    75,
+                    null,
+                    null);
 
             Course dataScienceCourse = createCourse(
                     "Data Science Fundamentals",
                     "Introduction to data analysis and machine learning",
                     false,
-                    80);
+                    80,
+                    null,
+                    null);
+
+            Course limitedCourse = createCourse(
+                    "Limited Enrollment Course",
+                    "This is a premium course with limited enrollment",
+                    true,
+                    75,
+                    2,
+                    99.99);
 
             // Associate users with courses
+            associateUserWithCourse(student3, limitedCourse);
+            associateUserWithCourse(teacher1, limitedCourse);
             associateUserWithCourse(student1, javaCourse);
             associateUserWithCourse(student1, webCourse);
             associateUserWithCourse(student2, javaCourse);
@@ -256,7 +273,8 @@ public class DataInitializerRunner {
                 });
     }
 
-    private Course createCourse(String title, String description, boolean available, int minScore) {
+    private Course createCourse(String title, String description, boolean available, int minScore,
+            Integer maxStudents, Double price) {
         // Since findByTitle is not available, we need to find the course by iterating
         for (Course course : courseRepository.findAll()) {
             if (course.getTitle().equals(title)) {
@@ -269,6 +287,9 @@ public class DataInitializerRunner {
         course.setDescription(description);
         course.setAvailable(available);
         course.setMinimumScore(minScore);
+        course.setMaxStudents(maxStudents);
+        course.setPrice(price);
+        course.setCurrentStudents(0);
         return courseRepository.save(course);
     }
 
@@ -280,6 +301,12 @@ public class DataInitializerRunner {
         UserCourseRole userCourseRole = new UserCourseRole();
         userCourseRole.setUser(user);
         userCourseRole.setCourse(course);
+
+        if (user.getRole() == Role.STUDENT) {
+            course.setCurrentStudents(course.getCurrentStudents() + 1);
+            courseRepository.save(course);
+        }
+
         userCourseRoleRepository.save(userCourseRole);
     }
 

@@ -23,6 +23,15 @@ public class Course {
     @Column(name = "min_score")
     private Integer minimumScore;
 
+    @Column(name = "max_students")
+    private Integer maxStudents;
+
+    @Column(name = "current_students")
+    private Integer currentStudents = 0;
+
+    @Column(name = "price")
+    private Double price;
+
     @OneToMany(mappedBy = "course")
     private Set<UserCourseRole> userRoles;
 
