@@ -9,6 +9,7 @@ import itmo.blps.blps.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -44,7 +45,7 @@ public class CourseEnrollmentService {
                 }
         }
 
-        @Transactional
+        @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
         public void enrollInCourse(Long userId, Long courseId) {
                 // First check if the user is already enrolled
                 if (userCourseRoleRepository.existsByUserIdAndCourseId(userId, courseId)) {
@@ -91,16 +92,15 @@ public class CourseEnrollmentService {
 
                 course = courseRepository.findById(courseId).orElseThrow();
 
-
                 // Check that increment was successful
                 int rowsAffected = courseRepository.incrementPlaceCount(courseId);
                 if (rowsAffected <= 0) {
-                    if (payment != null) {
-                        refundPayment(payment);
-                    }
-                    throw new CourseEnrollmentException(
-                            "UPDATE_FAILED",
-                            "Failed to increment course place count. Transaction will be rolled back.");
+                        if (payment != null) {
+                                refundPayment(payment);
+                        }
+                        throw new CourseEnrollmentException(
+                                        "UPDATE_FAILED",
+                                        "Failed to increment course place count. Transaction will be rolled back.");
                 }
 
                 UserCourseRole enrollment = new UserCourseRole();
@@ -108,28 +108,28 @@ public class CourseEnrollmentService {
                 enrollment.setCourse(course);
                 userCourseRoleRepository.save(enrollment);
         }
-        
+
         @Transactional
         public void disenrollFromCourse(Long userId, Long courseId) {
                 UserCourseRole enrollment = userCourseRoleRepository.findByUserIdAndCourseId(userId, courseId)
-                        .orElseThrow(() -> new CourseEnrollmentException(
-                                "NOT_ENROLLED",
-                                "User is not enrolled in this course"));
-                
+                                .orElseThrow(() -> new CourseEnrollmentException(
+                                                "NOT_ENROLLED",
+                                                "User is not enrolled in this course"));
+
                 userCourseRoleRepository.delete(enrollment);
-                
+
                 // Decrease course enrollment count atomically and check result
                 int rowsAffected = courseRepository.decrementPlaceCount(courseId);
                 if (rowsAffected <= 0) {
-                    log.warn("Failed to decrement place count for course {}", courseId);
-                    // We don't throw an exception here since the enrollment is already deleted
-                    // and we don't want to revert that operation
+                        log.warn("Failed to decrement place count for course {}", courseId);
+                        // We don't throw an exception here since the enrollment is already deleted
+                        // and we don't want to revert that operation
                 }
-                
+
                 log.info("User {} disenrolled from course {}", userId, courseId);
         }
 
-        @Transactional
+        @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
         public PaymentHistory processPayment(User user, Course course) {
                 log.info("Processing payment of {} for user {} for course {}",
                                 course.getPrice(), user.getUsername(), course.getTitle());
@@ -141,31 +141,24 @@ public class CourseEnrollmentService {
                 payment.setCreatedAt(LocalDateTime.now());
                 payment.setStatus(PaymentStatus.PROCESSING);
 
-                paymentHistoryRepository.save(payment);
-
-                try {
-                        if (random.nextInt(100) < 20) {
-                                log.warn("Payment rejected for user {} for course {}",
-                                                user.getUsername(), course.getTitle());
-                                throw new CourseEnrollmentException(
-                                                "PAYMENT_REJECTED",
-                                                "Payment rejected by the bank");
-                        }
-                        payment.setStatus(PaymentStatus.SUCCESSFUL);
-                        payment.setCompletedAt(LocalDateTime.now());
-                        paymentHistoryRepository.save(payment);
-                        log.info("Payment successfully processed for user {} for course {}",
+                if (random.nextInt(100) < 20) {
+                        log.warn("Payment rejected for user {} for course {}",
                                         user.getUsername(), course.getTitle());
-                } catch (Exception e) {
-                        log.error("Error processing payment for user {} for course {}: {}",
-                                        user.getUsername(), course.getTitle(), e.getMessage());
-                        throw e;
+                        throw new CourseEnrollmentException(
+                                        "PAYMENT_REJECTED",
+                                        "Payment rejected by the bank");
                 }
+
+                payment.setStatus(PaymentStatus.SUCCESSFUL);
+                payment.setCompletedAt(LocalDateTime.now());
+                paymentHistoryRepository.save(payment);
+                log.info("Payment successfully processed for user {} for course {}",
+                                user.getUsername(), course.getTitle());
 
                 return payment;
         }
 
-        @Transactional
+        @Transactional(propagation = Propagation.REQUIRES_NEW)
         public void refundPayment(PaymentHistory payment) {
                 User user = payment.getUser();
                 Course course = payment.getCourse();
