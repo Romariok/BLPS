@@ -197,7 +197,6 @@
         <flowNodeRef>Activity_1rvtay9</flowNodeRef>
         <flowNodeRef>Activity_0uu31t5</flowNodeRef>
         <flowNodeRef>Event_1n9p952</flowNodeRef>
-        <flowNodeRef>Event_1br9uzs</flowNodeRef>
       </lane>
       <lane id="Lane_0gpqtwp" name="user">
         <flowNodeRef>Activity_0x1ccjn</flowNodeRef>
@@ -382,11 +381,6 @@
     <sequenceFlow id="Flow_1e49dyd" name="no" sourceRef="Gateway_0bdj4ha" targetRef="Event_1br9uzs" />
     <sequenceFlow id="Flow_0z7lnck" sourceRef="Event_1n9p952" targetRef="Activity_0uu31t5" />
     <sequenceFlow id="Flow_125v4ki" sourceRef="Event_1bayrg4" targetRef="Activity_1ygtx1m" />
-    <endEvent id="Event_1br9uzs" name="access denied">
-      <incoming>Flow_1e49dyd</incoming>
-      <incoming>Flow_07rgdvr</incoming>
-      <errorEventDefinition id="ErrorEventDefinition_0rm70fp" />
-    </endEvent>
     <sequenceFlow id="Flow_1ovgp1d" name="yes" sourceRef="Gateway_1a4rbe0" targetRef="Activity_1rvtay9" />
     <exclusiveGateway id="Gateway_1a4rbe0" name="access asked for teacher?">
       <incoming>Flow_1itlp0w</incoming>
@@ -403,6 +397,11 @@
       <outgoing>Flow_0r87r90</outgoing>
     </task>
     <sequenceFlow id="Flow_0r87r90" sourceRef="Activity_0mypbu1" targetRef="Activity_02ydktt" />
+    <endEvent id="Event_1br9uzs" name="access denied">
+      <incoming>Flow_1e49dyd</incoming>
+      <incoming>Flow_07rgdvr</incoming>
+      <errorEventDefinition id="ErrorEventDefinition_0rm70fp" />
+    </endEvent>
   </process>
   <process id="Process_109nict">
     <laneSet id="LaneSet_15p9aug">
@@ -1263,12 +1262,6 @@
           <omgdc:Bounds x="220" y="2735" width="81" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1br9uzs_di" bpmnElement="Event_1br9uzs">
-        <omgdc:Bounds x="662" y="2692" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <omgdc:Bounds x="645" y="2735" width="71" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1a4rbe0_di" bpmnElement="Gateway_1a4rbe0" isMarkerVisible="true">
         <omgdc:Bounds x="835" y="2355" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -1282,6 +1275,12 @@
       <bpmndi:BPMNShape id="Activity_0mypbu1_di" bpmnElement="Activity_0mypbu1">
         <omgdc:Bounds x="810" y="3160" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1br9uzs_di" bpmnElement="Event_1br9uzs">
+        <omgdc:Bounds x="652" y="2902" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="635" y="2945" width="71" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0liqpji_di" bpmnElement="Flow_0liqpji">
         <omgdi:waypoint x="1370" y="2825" />
@@ -1405,10 +1404,10 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_07rgdvr_di" bpmnElement="Flow_07rgdvr">
         <omgdi:waypoint x="545" y="2310" />
-        <omgdi:waypoint x="680" y="2310" />
-        <omgdi:waypoint x="680" y="2692" />
+        <omgdi:waypoint x="670" y="2310" />
+        <omgdi:waypoint x="670" y="2902" />
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds x="579" y="2292" width="13" height="14" />
+          <omgdc:Bounds x="576" y="2292" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1txwejh_di" bpmnElement="Flow_1txwejh">
@@ -1425,10 +1424,10 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1e49dyd_di" bpmnElement="Flow_1e49dyd">
         <omgdi:waypoint x="835" y="2310" />
-        <omgdi:waypoint x="680" y="2310" />
-        <omgdi:waypoint x="680" y="2692" />
+        <omgdi:waypoint x="670" y="2310" />
+        <omgdi:waypoint x="670" y="2902" />
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds x="791" y="2292" width="13" height="14" />
+          <omgdc:Bounds x="789" y="2292" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0z7lnck_di" bpmnElement="Flow_0z7lnck">
@@ -2126,10 +2125,13 @@
         <omgdi:waypoint x="3060" y="900" />
         <omgdi:waypoint x="3110" y="900" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_099rkxk_di" bpmnElement="Association_099rkxk">
-        <omgdi:waypoint x="872" y="3250" />
-        <omgdi:waypoint x="894" y="3310" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Group_16h0jgu_di" bpmnElement="Group_16h0jgu">
+        <omgdc:Bounds x="340" y="2090" width="630" height="1160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1117etp_di" bpmnElement="TextAnnotation_1117etp">
+        <omgdc:Bounds x="850" y="3310" width="99.99419305018122" height="29.9873740695487" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="DataInputAssociation_1fuxek0_di" bpmnElement="DataInputAssociation_1fuxek0">
         <omgdi:waypoint x="2138" y="1686" />
         <omgdi:waypoint x="2173" y="1640" />
@@ -2266,13 +2268,10 @@
         <omgdi:waypoint x="3760" y="350" />
         <omgdi:waypoint x="3761" y="285" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Group_16h0jgu_di" bpmnElement="Group_16h0jgu">
-        <omgdc:Bounds x="340" y="2090" width="630" height="1160" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_1117etp_di" bpmnElement="TextAnnotation_1117etp">
-        <omgdc:Bounds x="850" y="3310" width="99.99419305018122" height="29.9873740695487" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_099rkxk_di" bpmnElement="Association_099rkxk">
+        <omgdi:waypoint x="872" y="3250" />
+        <omgdi:waypoint x="894" y="3310" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1iuxcke">
