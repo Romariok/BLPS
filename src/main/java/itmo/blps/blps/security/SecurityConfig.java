@@ -1,6 +1,5 @@
 package itmo.blps.blps.security;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import itmo.blps.blps.model.Permission;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableWebSecurity
@@ -40,7 +40,6 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints - make sure to explicitly permit ALL auth endpoints
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
                         // Course-related endpoints with permission checks
