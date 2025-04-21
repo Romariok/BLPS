@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Miss You!</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #4a86e8;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #4a86e8;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .highlight {
+            color: #4a86e8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>We Miss You!</h1>
+        </div>
+        <div class="content">
+            <h2>Hello <span th:text="${username}" class="highlight">Student</span>,</h2>
+            
+            <p>We've noticed you haven't been active in your courses for a while. Your last activity was on <span th:text="${#temporals.format(lastActiveTime, 'dd MMMM yyyy HH:mm')}" class="highlight">22 July 2023</span>.</p>
+            
+            <p>Learning is most effective when it's consistent. Even just 15 minutes a day can make a huge difference in your progress!</p>
+            
+            <p>Here are a few suggestions to get back on track:</p>
+            <ul>
+                <li>Resume your most recent lesson</li>
+                <li>Review past material to refresh your memory</li>
+                <li>Complete any pending assignments</li>
+                <li>Connect with your classmates or teachers if you need help</li>
+            </ul>
+            
+            <p>Ready to continue your learning journey?</p>
+            
+            <div style="text-align: center;">
+                <a href="#" class="btn">Return to Learning</a>
+            </div>
+            
+            <p>If you have any questions or need assistance, don't hesitate to reach out to our support team.</p>
+            
+            <p>Best regards,<br>The Learning Platform Team</p>
+        </div>
+        <div class="footer">
+            <p>This email was sent to you as part of your learning experience.<br>
+            © 2023 Learning Platform. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

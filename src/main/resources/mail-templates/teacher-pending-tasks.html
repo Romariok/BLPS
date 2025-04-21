@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks Waiting for Review</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #34a853;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #34a853;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .highlight {
+            color: #34a853;
+            font-weight: bold;
+        }
+        .task-count {
+            font-size: 3rem;
+            text-align: center;
+            color: #ea4335;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .priority {
+            background-color: #fde293;
+            border-left: 4px solid #f9a825;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tasks Waiting for Review</h1>
+        </div>
+        <div class="content">
+            <h2>Hello <span th:text="${username}" class="highlight">Teacher</span>,</h2>
+            
+            <p>We're reaching out to let you know that there are currently:</p>
+            
+            <div class="task-count" th:text="${taskCount}">5+</div>
+            
+            <p>submissions from your students that need your review and feedback.</p>
+            
+            <div class="priority">
+                <p><strong>Priority Notice:</strong> Students learn best when they receive timely feedback. Please try to review these submissions at your earliest convenience.</p>
+            </div>
+            
+            <p>As an educator, your feedback is invaluable to your students' learning process. Timely reviews help students stay motivated and improve their understanding of the material.</p>
+            
+            <div style="text-align: center;">
+                <a href="#" class="btn">Review Student Submissions</a>
+            </div>
+            
+            <p>Thank you for your dedication to your students' education!</p>
+            
+            <p>Best regards,<br>The Learning Platform Team</p>
+        </div>
+        <div class="footer">
+            <p>This email was sent to you as part of your teaching responsibilities.<br>
+            © 2023 Learning Platform. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
