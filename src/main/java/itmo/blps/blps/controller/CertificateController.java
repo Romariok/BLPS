@@ -38,9 +38,7 @@ public class CertificateController {
     @PostMapping("/request")
     public ResponseEntity<CertificateRequestResponseDTO> requestCertificate(
             @RequestBody CertificateRequestDTO request) throws TaskOperationException {
-        // Get the current user ID from security context
         Long currentUserId = securityUtils.getCurrentUserId();
-        
         return ResponseEntity.ok(certificateService.requestCertificate(
                 currentUserId,
                 request.getCourseId()));

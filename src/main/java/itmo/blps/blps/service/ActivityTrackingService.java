@@ -1,6 +1,5 @@
 package itmo.blps.blps.service;
 
-import itmo.blps.blps.model.User;
 import itmo.blps.blps.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
