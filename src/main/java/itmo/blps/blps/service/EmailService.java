@@ -71,7 +71,7 @@ public class EmailService {
     private MimeMessageHelper createMessageHelper(String to, String subject) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom(SENDER_EMAIL);
+        helper.setFrom(senderEmail);
         helper.setTo(to);
         helper.setSubject(subject);
         return helper;
