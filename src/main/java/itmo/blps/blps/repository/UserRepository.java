@@ -17,6 +17,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     List<User> findByRole(Role role);
     
-    @Query("SELECT u FROM User u JOIN u.courseRoles cr WHERE cr.role = 'TEACHER'")
+    @Query("SELECT u FROM User u WHERE u.role = 'TEACHER'")
     List<User> findAllTeachers();
+
+    @Query("SELECT u FROM User u WHERE u.lastActiveTime < :cutoffTime AND u.role = 'STUDENT'")
+    List<User> findInactiveUsers(java.time.LocalDateTime cutoffTime);
 }
