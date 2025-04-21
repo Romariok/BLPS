@@ -21,7 +21,7 @@ public class NotificationService {
     private UserRepository userRepository;
 
     @Autowired
-    private EmailService emailService;
+    private JcaEmailService emailService;
 
     @Autowired
     private TaskSubmissionRepository taskSubmissionRepository;

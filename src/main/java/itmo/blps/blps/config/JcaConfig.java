@@ -52,6 +52,7 @@ public class JcaConfig {
         mcf.setUsername(username);
         mcf.setPassword(password);
         mcf.setProtocol(protocol);
+        mcf.setSenderEmail(senderEmail);
         return mcf;
     }
     
