@@ -6,7 +6,9 @@ import itmo.blps.blps.model.CertificateRequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface CertificateRequestRepository extends JpaRepository<CertificateRequest, Long> {
     boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
 
