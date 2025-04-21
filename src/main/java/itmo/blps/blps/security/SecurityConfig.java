@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import itmo.blps.blps.filter.ActivityTrackingFilter;
 import itmo.blps.blps.model.Permission;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private ActivityTrackingFilter activityTrackingFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -71,7 +75,8 @@ public class SecurityConfig {
                         // Require authentication for any other request
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(activityTrackingFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
