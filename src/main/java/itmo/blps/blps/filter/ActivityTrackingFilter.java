@@ -39,10 +39,7 @@ public class ActivityTrackingFilter extends OncePerRequestFilter {
                 !"anonymousUser".equals(authentication.getPrincipal().toString())) {
             
             try {
-                // Extract user ID from principal
                 String username = authentication.getName();
-                
-                // Update last active time asynchronously to avoid impacting response time
                 new Thread(() -> {
                     try {
                         log.debug("Updating last active time for user: {}", username);
@@ -52,7 +49,6 @@ public class ActivityTrackingFilter extends OncePerRequestFilter {
                     }
                 }).start();
             } catch (Exception e) {
-                // Log but don't rethrow to ensure the response is not affected
                 log.error("Error in activity tracking filter", e);
             }
         }

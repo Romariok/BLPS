@@ -118,12 +118,9 @@ public class CourseEnrollmentService {
 
                 userCourseRoleRepository.delete(enrollment);
 
-                // Decrease course enrollment count atomically and check result
                 int rowsAffected = courseRepository.decrementPlaceCount(courseId);
                 if (rowsAffected <= 0) {
                         log.warn("Failed to decrement place count for course {}", courseId);
-                        // We don't throw an exception here since the enrollment is already deleted
-                        // and we don't want to revert that operation
                 }
 
                 log.info("User {} disenrolled from course {}", userId, courseId);

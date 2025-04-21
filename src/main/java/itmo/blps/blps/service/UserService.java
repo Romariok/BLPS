@@ -28,30 +28,22 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        // Initialize roles set
         Set<Role> roles = new HashSet<>();
 
-        // Add the user's role if it exists
         if (user.getRole() != null) {
             roles.add(user.getRole());
         }
-
-        // Collect all permissions for all roles
         Set<Permission> permissions = new HashSet<>();
         for (Role role : roles) {
             permissions.addAll(rolePermissionRepository.findPermissionsByRole(role));
         }
 
-        // Create authorities for both roles and permissions for JAAS
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
-        // Add role-based authorities
         roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name())));
 
-        // Add permission-based authorities
         permissions.forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission.name())));
 
-        // Return Spring Security User object
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),

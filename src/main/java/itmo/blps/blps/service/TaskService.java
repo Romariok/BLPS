@@ -36,7 +36,6 @@ public class TaskService {
                                                 "TASK_NOT_FOUND",
                                                 "Task not found"));
                 
-                // Check if the user is enrolled in the course that contains this task
                 boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
                 
                 if (!isEnrolled) {
@@ -60,7 +59,6 @@ public class TaskService {
                                                 "USER_NOT_FOUND",
                                                 "User not found"));
                 
-                // Check if the user is enrolled in the course that contains this task
                 boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
                 
                 if (!isEnrolled) {
@@ -112,7 +110,6 @@ public class TaskService {
                                                 "TASK_NOT_FOUND",
                                                 "Task not found"));
                 
-                // Check if the teacher is assigned to the course that contains this task
                 boolean isAssigned = userCourseRoleRepository.existsByUserIdAndCourseId(teacherId, task.getCourse().getId());
                 
                 if (!isAssigned) {
@@ -138,15 +135,13 @@ public class TaskService {
                                 .orElseThrow(() -> new TaskOperationException(
                                                 "TEACHER_NOT_FOUND",
                                                 "Teacher not found"));
-                                
-                // Verify the user is a teacher
+
                 if (teacher.getRole() != Role.TEACHER) {
                         throw new TaskOperationException(
                                 "UNAUTHORIZED_ROLE",
                                 "Only teachers can score submissions");
                 }
                 
-                // Check if the teacher is assigned to the course that contains this task
                 boolean isAssigned = userCourseRoleRepository.existsByUserIdAndCourseId(teacherId, submission.getTask().getCourse().getId());
                 
                 if (!isAssigned) {
@@ -179,8 +174,7 @@ public class TaskService {
                                 .orElseThrow(() -> new TaskOperationException(
                                                 "TASK_NOT_FOUND",
                                                 "Task not found"));
-                
-                // Check if the user is enrolled in the course that contains this task
+
                 boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
                 
                 if (!isEnrolled) {

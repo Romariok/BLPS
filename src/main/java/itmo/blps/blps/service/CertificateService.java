@@ -27,7 +27,6 @@ public class CertificateService {
 
         @Transactional
         public CertificateRequestResponseDTO requestCertificate(Long userId, Long courseId) {
-                // Check if user already requested certificate
                 if (certificateRequestRepository.existsByStudentIdAndCourseId(userId, courseId)) {
                         throw new TaskOperationException(
                                         "DUPLICATE_REQUEST",
@@ -44,7 +43,6 @@ public class CertificateService {
                                                 "USER_NOT_FOUND",
                                                 "User not found"));
 
-                // Get all tasks for the course in a separate query
                 List<Task> courseTasks = taskRepository.findByCourseId(courseId);
 
                 boolean allTasksCompleted = courseTasks.stream()
@@ -64,8 +62,6 @@ public class CertificateService {
                                         "INCOMPLETE_COURSE",
                                         "Not all tasks are completed with passing score");
                 }
-
-                // Save certificate request
                 CertificateRequest request = new CertificateRequest();
                 request.setStudent(student);
                 request.setCourse(course);

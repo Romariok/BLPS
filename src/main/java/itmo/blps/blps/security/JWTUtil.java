@@ -32,35 +32,21 @@ public class JWTUtil {
     @PostConstruct
     public void init() {
         try {
-            // For production, use a properly generated key from application properties
-            // If the key is too short, generate a secure key using Keys.secretKeyFor
             try {
-                // Try to use the provided secret key
                 secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKeyString));
                 log.info("Using provided JWT secret key");
             } catch (Exception e) {
-                // If the provided key is invalid or too weak, generate a secure one
                 log.warn("Provided JWT secret key is invalid or too weak. Generating a secure key...");
                 secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
                 log.info("Generated secure JWT secret key");
             }
         } catch (Exception e) {
             log.error("Error initializing JWT secret key", e);
-            // Fallback to a secure key
             secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
             log.info("Using fallback secure JWT secret key");
         }
     }
 
-    // Legacy method - kept for backward compatibility
-    public String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    // Enhanced method that supports all authorities (roles and permissions)
     public String generateToken(String username, Set<String> authorities) {
         String authoritiesString = String.join(",", authorities);
         return Jwts.builder()
