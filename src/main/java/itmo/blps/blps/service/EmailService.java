@@ -17,24 +17,22 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class EmailService{
+public class EmailService {
 
     private final JavaMailSender emailSender;
     private final TemplateEngine templateEngine;
+    @Value("${sender.email}")
+    private String senderEmail;
 
     public void sendMessageWithAttachment(String to, String subject, String text, String attachmentPath) {
         try {
-            MimeMessage message = emailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            
-            helper.setTo(to);
-            helper.setSubject(subject);
+            MimeMessageHelper helper = createMessageHelper(to, subject);
             helper.setText(text);
-            
+
             FileSystemResource file = new FileSystemResource(new File(attachmentPath));
             helper.addAttachment(file.getFilename(), file);
-            
-            emailSender.send(message);
+
+            emailSender.send(helper.getMimeMessage());
             log.info("Email with attachment sent to {}", to);
         } catch (MessagingException e) {
             log.error("Failed to send email with attachment to {}", to, e);
@@ -44,14 +42,10 @@ public class EmailService{
 
     public void sendHtmlMessage(String to, String subject, String htmlContent) {
         try {
-            MimeMessage message = emailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            
-            helper.setTo(to);
-            helper.setSubject(subject);
+            MimeMessageHelper helper = createMessageHelper(to, subject);
             helper.setText(htmlContent, true);
-            
-            emailSender.send(message);
+
+            emailSender.send(helper.getMimeMessage());
             log.info("HTML email sent to {}", to);
         } catch (MessagingException e) {
             log.error("Failed to send HTML email to {}", to, e);
@@ -63,9 +57,9 @@ public class EmailService{
         try {
             Context thymeleafContext = new Context();
             thymeleafContext.setVariables(templateModel);
-            
+
             String htmlBody = templateEngine.process(templateName, thymeleafContext);
-            
+
             sendHtmlMessage(to, subject, htmlBody);
             log.info("Template email sent to {} using template {}", to, templateName);
         } catch (Exception e) {
@@ -73,4 +67,13 @@ public class EmailService{
             throw new RuntimeException("Failed to send template email", e);
         }
     }
-} 
+    
+    private MimeMessageHelper createMessageHelper(String to, String subject) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(SENDER_EMAIL);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        return helper;
+    }
+}

@@ -46,7 +46,7 @@ public class ActivityTrackingFilter extends OncePerRequestFilter {
                 new Thread(() -> {
                     try {
                         log.debug("Updating last active time for user: {}", username);
-                        activityTrackingService.trackActivityByUsername(username);
+                        activityTrackingService.trackActivity(username);
                     } catch (Exception e) {
                         log.error("Error updating last active time for user: {}", username, e);
                     }

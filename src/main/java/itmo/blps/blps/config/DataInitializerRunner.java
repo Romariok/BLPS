@@ -58,11 +58,11 @@ public class DataInitializerRunner {
     public void loadTestData() {
         try {
             // Create users with roles
-            User student1 = createUser("student1", "affi7@ya.ru", Role.STUDENT);
-            User student2 = createUser("student2", "affi7@yandex.by", Role.STUDENT);
-            User student3 = createUser("student3", "affi7@yandex.com", Role.STUDENT);
-            User teacher1 = createUser("teacher1", "affi7@yandex.ru", Role.TEACHER);
-            createUser("admin", "affi7@yandex.kz", Role.TEACHER);
+            User student1 = createUser("student1", "affi7@ya.ru", Role.STUDENT, LocalDateTime.now().minusSeconds(30));
+            User student2 = createUser("student2", "affi7@yandex.by", Role.STUDENT,LocalDateTime.now().minusSeconds(45));
+            User student3 = createUser("student3", "affi7@yandex.com", Role.STUDENT,LocalDateTime.now().minusSeconds(60));
+            User teacher1 = createUser("teacher1", "affi7@yandex.ru", Role.TEACHER,LocalDateTime.now().minusSeconds(75));
+            createUser("admin", "affi7@yandex.kz", Role.TEACHER,LocalDateTime.now().minusSeconds(90));
 
             // Create courses
             Course javaCourse = createCourse(
@@ -262,7 +262,7 @@ public class DataInitializerRunner {
         }
     }
 
-    private User createUser(String username, String email, Role role) {
+    private User createUser(String username, String email, Role role, LocalDateTime lastActiveTime) {
         return userRepository.findByUsername(username)
                 .orElseGet(() -> {
                     User user = new User();
@@ -270,6 +270,7 @@ public class DataInitializerRunner {
                     user.setPassword(passwordEncoder.encode("password"));
                     user.setRole(role);
                     user.setEmail(email);
+                    user.setLastActiveTime(lastActiveTime);
                     return userRepository.save(user);
                 });
     }
