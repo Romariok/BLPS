@@ -45,15 +45,4 @@ public class SmtpResourceAdapter implements ResourceAdapter, Serializable {
         // No XA transaction support
         return null;
     }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        return o != null && getClass() == o.getClass();
-    }
-    
-    @Override
-    public int hashCode() {
-        return 31;
-    }
 } 

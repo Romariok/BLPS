@@ -7,13 +7,11 @@ import org.springframework.context.annotation.Primary;
 
 import itmo.blps.blps.jca.SmtpConnection;
 import itmo.blps.blps.jca.SmtpConnectionFactory;
-import itmo.blps.blps.jca.SmtpConnectionFactoryImpl;
 import itmo.blps.blps.jca.SmtpManagedConnectionFactory;
 import itmo.blps.blps.jca.SmtpResourceAdapter;
 
 import jakarta.resource.ResourceException;
 import org.springframework.jca.support.ResourceAdapterFactoryBean;
-
 
 @Configuration
 public class JcaConfig {
@@ -32,17 +30,17 @@ public class JcaConfig {
 
     @Value("${spring.mail.protocol}")
     private String protocol;
-    
+
     @Value("${sender.email}")
     private String senderEmail;
-    
+
     @Bean
     public ResourceAdapterFactoryBean resourceAdapter() {
         ResourceAdapterFactoryBean bean = new ResourceAdapterFactoryBean();
         bean.setResourceAdapter(new SmtpResourceAdapter());
         return bean;
     }
-    
+
     @Bean
     @Primary
     public SmtpManagedConnectionFactory smtpManagedConnectionFactory() {
@@ -55,17 +53,17 @@ public class JcaConfig {
         mcf.setSenderEmail(senderEmail);
         return mcf;
     }
-    
+
     @Bean
-    public SmtpConnectionFactoryImpl smtpConnectionFactory(
+    public SmtpConnectionFactory smtpConnectionFactory(
             SmtpManagedConnectionFactory managedConnectionFactory) {
-        return new SmtpConnectionFactoryImpl(managedConnectionFactory, null);
+        return new SmtpConnectionFactory(managedConnectionFactory, null);
     }
-    
+
     @Bean
-    public SmtpConnection smtpConnection(SmtpConnectionFactory connectionFactory) 
+    public SmtpConnection smtpConnection(SmtpConnectionFactory connectionFactory)
             throws ResourceException {
-        
+
         return connectionFactory.getConnection();
     }
-} 
+}

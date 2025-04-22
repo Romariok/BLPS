@@ -20,7 +20,7 @@ public class SmtpManagedConnection implements ManagedConnection {
     private final Session mailSession;
     private PrintWriter logWriter;
     private final List<ConnectionEventListener> listeners;
-    private final List<SmtpConnectionImpl> connections;
+    private final List<SmtpConnection> connections;
 
     public SmtpManagedConnection(SmtpManagedConnectionFactory factory, String username, String password,
             Properties mailProperties) {
@@ -42,14 +42,14 @@ public class SmtpManagedConnection implements ManagedConnection {
 
     @Override
     public Object getConnection(Subject subject, ConnectionRequestInfo cri) throws ResourceException {
-        SmtpConnectionImpl connection = new SmtpConnectionImpl(this, mailSession, factory.getSenderEmail(), username);
+        SmtpConnection connection = new SmtpConnection(this, mailSession, factory.getSenderEmail(), username);
         connections.add(connection);
         return connection;
     }
 
     @Override
     public void destroy() throws ResourceException {
-        for (SmtpConnectionImpl connection : connections) {
+        for (SmtpConnection connection : connections) {
             connection.invalidate();
         }
         connections.clear();
@@ -57,7 +57,7 @@ public class SmtpManagedConnection implements ManagedConnection {
 
     @Override
     public void cleanup() throws ResourceException {
-        for (SmtpConnectionImpl connection : connections) {
+        for (SmtpConnection connection : connections) {
             connection.invalidate();
         }
         connections.clear();
@@ -65,7 +65,7 @@ public class SmtpManagedConnection implements ManagedConnection {
 
     @Override
     public void associateConnection(Object connection) throws ResourceException {
-        if (connection instanceof SmtpConnectionImpl smtpConn) {
+        if (connection instanceof SmtpConnection smtpConn) {
             connections.add(smtpConn);
         } else {
             throw new ResourceException("Invalid connection type");

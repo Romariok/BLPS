@@ -7,9 +7,14 @@ import java.io.PrintWriter;
 import java.util.Properties;
 import java.util.Set;
 import javax.security.auth.Subject;
-import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
-@ConnectionDefinition(connectionFactory = SmtpConnectionFactory.class, connectionFactoryImpl = SmtpConnectionFactoryImpl.class, connection = SmtpConnection.class, connectionImpl = SmtpConnectionImpl.class)
+@Getter
+@Setter
+@EqualsAndHashCode(of = {"host", "port", "username", "protocol"})
+@ConnectionDefinition(connectionFactory = SmtpConnectionFactory.class, connectionFactoryImpl = SmtpConnectionFactory.class, connection = SmtpConnection.class, connectionImpl = SmtpConnection.class)
 public class SmtpManagedConnectionFactory implements ManagedConnectionFactory, ResourceAdapterAssociation {
 
     private static final long serialVersionUID = 1L;
@@ -25,12 +30,12 @@ public class SmtpManagedConnectionFactory implements ManagedConnectionFactory, R
 
     @Override
     public Object createConnectionFactory(ConnectionManager cm) throws ResourceException {
-        return new SmtpConnectionFactoryImpl(this, cm);
+        return new SmtpConnectionFactory(this, cm);
     }
 
     @Override
     public Object createConnectionFactory() throws ResourceException {
-        return new SmtpConnectionFactoryImpl(this, null);
+        return new SmtpConnectionFactory(this, null);
     }
 
     @Override
@@ -68,7 +73,7 @@ public class SmtpManagedConnectionFactory implements ManagedConnectionFactory, R
         mailProps.put("mail.smtp.starttls.enable", "true");
         mailProps.put("mail.smtp.user", userName);
         mailProps.put("mail.smtp.password", password);
-        mailProps.put("mail.debug", "true");
+        mailProps.put("mail.debug", "false");
 
         return new SmtpManagedConnection(this, userName, password, mailProps);
     }
@@ -117,73 +122,5 @@ public class SmtpManagedConnectionFactory implements ManagedConnectionFactory, R
             throw new ResourceException("Invalid resource adapter provided");
         }
         this.resourceAdapter = (SmtpResourceAdapter) ra;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public String getSenderEmail() {
-        return senderEmail;
-    }
-
-    public void setSenderEmail(String senderEmail) {
-        this.senderEmail = senderEmail;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        SmtpManagedConnectionFactory that = (SmtpManagedConnectionFactory) o;
-
-        return port == that.port &&
-                Objects.equals(host, that.host) &&
-                Objects.equals(username, that.username) &&
-                Objects.equals(protocol, that.protocol);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(host, port, username, protocol);
     }
 }

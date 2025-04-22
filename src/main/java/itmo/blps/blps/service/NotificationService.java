@@ -26,7 +26,7 @@ public class NotificationService {
     @Autowired
     private TaskSubmissionRepository taskSubmissionRepository;
 
-    @Scheduled(fixedRate = 1200000, initialDelay = 10000) // 20 minutes
+    @Scheduled(fixedRate = 1200000, initialDelay = 1000000) // 20 minutes
     public void notificateUser() {
         java.time.LocalDateTime cutoffTime = java.time.LocalDateTime.now().minusMinutes(1);
         List<User> inactiveUsers = userRepository.findInactiveUsers(cutoffTime);
