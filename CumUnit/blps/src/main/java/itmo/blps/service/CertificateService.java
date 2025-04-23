@@ -68,14 +68,19 @@ public class CertificateService {
 
     private String generatePdf(String html, Long userId, Long courseId) throws Exception {
         String outputPath = "certificate_" + userId + "_" + courseId + ".pdf";
-
+        
         try (FileOutputStream os = new FileOutputStream(outputPath)) {
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(html);
+            
+            // Set landscape orientation
+            renderer.getSharedContext().setBaseURL("file:///");
+            
             renderer.layout();
             renderer.createPDF(os);
+            renderer.finishPDF();
         }
-
+        
         return outputPath;
     }
 

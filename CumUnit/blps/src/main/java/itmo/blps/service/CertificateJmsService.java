@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CertificateProcessorService {
+public class CertificateJmsService {
 
     private final CertificateService certificateService;
 
