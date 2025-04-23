@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Course Completion Certificate</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+      .certificate {
+        width: 800px;
+        height: 600px;
+        margin: 0 auto;
+        padding: 40px;
+        background: #fff;
+        border: 20px solid #2c3e50;
+        position: relative;
+      }
+      .border {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        bottom: 20px;
+        left: 20px;
+        border: 2px solid #3498db;
+      }
+      .content {
+        text-align: center;
+        position: relative;
+        z-index: 10;
+        padding: 40px;
+      }
+      .title {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #2c3e50;
+      }
+      .subtitle {
+        font-size: 24px;
+        margin-bottom: 40px;
+        color: #3498db;
+      }
+      .name {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #2c3e50;
+      }
+      .course {
+        font-size: 24px;
+        margin-bottom: 30px;
+        color: #2c3e50;
+      }
+      .info {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .signature {
+        margin-top: 50px;
+        font-style: italic;
+        font-size: 20px;
+      }
+      .cert-id {
+        position: absolute;
+        bottom: 30px;
+        right: 30px;
+        font-size: 12px;
+        color: #7f8c8d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="certificate">
+      <div class="border"></div>
+      <div class="content">
+        <div class="title">CERTIFICATE OF COMPLETION</div>
+        <div class="subtitle">This is to certify that</div>
+        <div class="name" th:text="${userName}">John Doe</div>
+        <div class="subtitle">has successfully completed the course</div>
+        <div class="course" th:text="${courseName}">Advanced Programming</div>
+        <div class="info" th:text="'Completion Date: ' + ${completionDate}">
+          Completion Date: May 12, 2023
+        </div>
+        <div class="cert-id" th:text="${certificateId}">CERT-123456</div>
+      </div>
+    </div>
+  </body>
+</html>
