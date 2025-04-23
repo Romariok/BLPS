@@ -3,6 +3,7 @@ package itmo.blps.blps.service;
 import itmo.blps.blps.dto.CertificateRequestResponseDTO;
 import itmo.blps.blps.dto.CertificateRequestListDTO;
 import itmo.blps.blps.dto.CertificateDecisionDTO;
+import itmo.blps.blps.dto.CertificateRequestJmsDTO;
 import itmo.blps.blps.exception.TaskOperationException;
 import itmo.blps.blps.model.*;
 import itmo.blps.blps.repository.*;
@@ -24,6 +25,7 @@ public class CertificateService {
         private final CertificateRequestRepository certificateRequestRepository;
         private final TaskRepository taskRepository;
         private final CertificateMapper certificateMapper;
+        private final JmsProducerService jmsProducerService;
 
         @Transactional
         public CertificateRequestResponseDTO requestCertificate(Long userId, Long courseId) {
@@ -113,10 +115,17 @@ public class CertificateService {
                                 : CertificateRequestStatus.REJECTED);
 
                 certificateRequestRepository.save(request);
-
+                requestCertificateGeneration(request.getStudent().getId(),request.getCourse().getId());
                 return new CertificateRequestResponseDTO(
                                 true,
                                 decision.isApproved() ? "Certificate request approved" : "Certificate request rejected",
                                 request.getStatus().toString());
+        }
+
+        public void requestCertificateGeneration(Long userId, Long courseId) {
+                CertificateRequestJmsDTO requestDto = new CertificateRequestJmsDTO();
+                requestDto.setUserId(userId);
+                requestDto.setCourseId(courseId);
+                jmsProducerService.sendMessage(requestDto);
         }
 }
