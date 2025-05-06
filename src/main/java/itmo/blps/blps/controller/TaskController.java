@@ -8,8 +8,10 @@ import itmo.blps.blps.dto.TaskScoreDTO;
 import itmo.blps.blps.exception.CourseEnrollmentException;
 import itmo.blps.blps.exception.TaskOperationException;
 import itmo.blps.blps.security.SecurityUtils;
-import itmo.blps.blps.service.TaskService;
+import itmo.blps.blps.service.TaskSubmisionService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "Задания", description = "API для работы с заданиями курса")
 public class TaskController {
-        private final TaskService taskService;
+        @Autowired
+        private final TaskSubmisionService taskService;
+        @Autowired
         private final SecurityUtils securityUtils;
 
         @Operation(summary = "Получить задание по ID", description = "Возвращает информацию о задании по указанному ID")
@@ -79,7 +83,7 @@ public class TaskController {
                         throws TaskOperationException {
                 // Get the current teacher ID from security context
                 Long currentTeacherId = securityUtils.getCurrentUserId();
-                
+
                 return ResponseEntity.ok(taskService.getUnscoredSubmissions(currentTeacherId, taskId));
         }
 

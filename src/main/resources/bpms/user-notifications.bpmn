@@ -4,15 +4,15 @@
     <bpmn:extensionElements />
     <bpmn:participant id="Participant_0cyeddt" name="inactive user notification" processRef="Process_0jc9j0x" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_0jc9j0x" isExecutable="true">
+  <bpmn:process id="Process_0jc9j0x" isExecutable="true" camunda:historyTimeToLive="1">
     <bpmn:extensionElements />
     <bpmn:laneSet id="LaneSet_0ftj5w5">
       <bpmn:lane id="Lane_031f9u4" name="back">
         <bpmn:flowNodeRef>Event_15qyl8t</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_160tj2g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_0huznyo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0icv3zd</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_1tj9moh" name="user" />
     </bpmn:laneSet>
     <bpmn:startEvent id="Event_15qyl8t" name="every 2 minutes">
       <bpmn:outgoing>Flow_13ds5f7</bpmn:outgoing>
@@ -37,6 +37,7 @@
     <bpmn:sequenceFlow id="Flow_1vcmxfb" sourceRef="Activity_160tj2g" targetRef="Activity_0icv3zd" />
     <bpmn:subProcess id="Activity_0icv3zd" name="check activity for each user and send email">
       <bpmn:incoming>Flow_1vcmxfb</bpmn:incoming>
+      <bpmn:outgoing>Flow_197g5pp</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics camunda:collection="listStudent" camunda:elementVariable="currentStudent" />
       <bpmn:startEvent id="Event_0wu95k9" name="sub process start">
         <bpmn:outgoing>Flow_05wylky</bpmn:outgoing>
@@ -53,29 +54,42 @@
         <bpmn:outgoing>Flow_0f5411i</bpmn:outgoing>
       </bpmn:serviceTask>
       <bpmn:inclusiveGateway id="Gateway_1phtex6" name="Inactive?">
+        <bpmn:extensionElements />
         <bpmn:incoming>Flow_0f5411i</bpmn:incoming>
         <bpmn:outgoing>Flow_0geti2d</bpmn:outgoing>
+        <bpmn:outgoing>Flow_1lcnckr</bpmn:outgoing>
       </bpmn:inclusiveGateway>
-      <bpmn:task id="Activity_1t1vc2d">
-        <bpmn:incoming>Flow_0geti2d</bpmn:incoming>
-      </bpmn:task>
-      <bpmn:sequenceFlow id="Flow_0geti2d" sourceRef="Gateway_1phtex6" targetRef="Activity_1t1vc2d">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"></bpmn:conditionExpression>
+      <bpmn:sequenceFlow id="Flow_0geti2d" name="yes" sourceRef="Gateway_1phtex6" targetRef="Activity_1t1vc2d">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isInactive == true}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_1lcnckr" name="no" sourceRef="Gateway_1phtex6" targetRef="Event_13t8mrx">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isInactive == false}</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:endEvent id="Event_13t8mrx" name="good ending">
+        <bpmn:incoming>Flow_1lcnckr</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:serviceTask id="Activity_1t1vc2d" name="send notification to user by email" camunda:asyncBefore="true" camunda:expression="${notificationService.sendNotification(execution)}">
+        <bpmn:incoming>Flow_0geti2d</bpmn:incoming>
+        <bpmn:outgoing>Flow_0ivl3mj</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="Event_17mucxi" name="bad ending :-(">
+        <bpmn:incoming>Flow_0ivl3mj</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0ivl3mj" sourceRef="Activity_1t1vc2d" targetRef="Event_17mucxi" />
     </bpmn:subProcess>
+    <bpmn:endEvent id="Event_0huznyo" name="user is notificated if needed">
+      <bpmn:incoming>Flow_197g5pp</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_197g5pp" sourceRef="Activity_0icv3zd" targetRef="Event_0huznyo" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1rrhoxd">
       <bpmndi:BPMNShape id="Participant_0cyeddt_di" bpmnElement="Participant_0cyeddt" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="1180" height="780" />
+        <dc:Bounds x="160" y="80" width="778" height="350" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_031f9u4_di" bpmnElement="Lane_031f9u4" isHorizontal="true">
-        <dc:Bounds x="190" y="80" width="1150" height="390" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_1tj9moh_di" bpmnElement="Lane_1tj9moh" isHorizontal="true">
-        <dc:Bounds x="190" y="470" width="1150" height="390" />
+        <dc:Bounds x="190" y="80" width="748" height="350" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0v9xla4_di" bpmnElement="Event_15qyl8t">
@@ -93,6 +107,12 @@
       <bpmndi:BPMNShape id="Activity_1mo8vzb_di" bpmnElement="Activity_160tj2g">
         <dc:Bounds x="380" y="230" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0huznyo_di" bpmnElement="Event_0huznyo">
+        <dc:Bounds x="802" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="777" y="295" width="86" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_08iqrrl_di" bpmnElement="Activity_0icv3zd">
         <dc:Bounds x="590" y="230" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -104,6 +124,10 @@
       <bpmndi:BPMNEdge id="Flow_1vcmxfb_di" bpmnElement="Flow_1vcmxfb">
         <di:waypoint x="480" y="270" />
         <di:waypoint x="590" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_197g5pp_di" bpmnElement="Flow_197g5pp">
+        <di:waypoint x="690" y="270" />
+        <di:waypoint x="802" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_08r2n1l_di" bpmnElement="DataInputAssociation_08r2n1l">
         <di:waypoint x="430" y="175" />
@@ -125,11 +149,23 @@
       <bpmndi:BPMNShape id="Gateway_0pejkxd_di" bpmnElement="Gateway_1phtex6">
         <dc:Bounds x="505" y="95" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="510" y="152" width="45" height="14" />
+          <dc:Bounds x="507" y="71" width="45" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1t1vc2d_di" bpmnElement="Activity_1t1vc2d">
-        <dc:Bounds x="650" y="80" width="100" height="80" />
+      <bpmndi:BPMNShape id="Event_13t8mrx_di" bpmnElement="Event_13t8mrx">
+        <dc:Bounds x="642" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="630" y="255" width="61" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06vhh7t_di" bpmnElement="Activity_1t1vc2d">
+        <dc:Bounds x="700" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_17mucxi_di" bpmnElement="Event_17mucxi">
+        <dc:Bounds x="882" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="866" y="145" width="69" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_05wylky_di" bpmnElement="Flow_05wylky">
         <di:waypoint x="218" y="120" />
@@ -141,7 +177,22 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0geti2d_di" bpmnElement="Flow_0geti2d">
         <di:waypoint x="555" y="120" />
-        <di:waypoint x="650" y="120" />
+        <di:waypoint x="700" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="619" y="102" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lcnckr_di" bpmnElement="Flow_1lcnckr">
+        <di:waypoint x="530" y="145" />
+        <di:waypoint x="530" y="230" />
+        <di:waypoint x="642" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="543" y="203" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ivl3mj_di" bpmnElement="Flow_0ivl3mj">
+        <di:waypoint x="800" y="120" />
+        <di:waypoint x="882" y="120" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

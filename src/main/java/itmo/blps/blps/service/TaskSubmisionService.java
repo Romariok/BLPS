@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TaskService {
+public class TaskSubmisionService {
         private final TaskRepository taskRepository;
         private final TaskSubmissionRepository submissionRepository;
         private final UserRepository userRepository;

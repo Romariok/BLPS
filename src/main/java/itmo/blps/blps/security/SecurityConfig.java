@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-
+                        .requestMatchers("/camunda/**").permitAll()
                         // Course-related endpoints with permission checks
                         .requestMatchers("/api/courses/new").hasAuthority(Permission.CREATE_COURSE.name())
                         .requestMatchers("/api/courses/*/edit").hasAuthority(Permission.EDIT_COURSE.name())
@@ -74,6 +74,7 @@ public class SecurityConfig {
 
                         // Require authentication for any other request
                         .anyRequest().authenticated())
+                        
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(activityTrackingFilter, JwtAuthenticationFilter.class);
