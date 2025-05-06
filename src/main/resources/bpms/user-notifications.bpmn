@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1wpqw70" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1wpqw70" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
   <bpmn:collaboration id="Collaboration_1rrhoxd">
     <bpmn:extensionElements />
     <bpmn:participant id="Participant_0cyeddt" name="inactive user notification" processRef="Process_0jc9j0x" />
@@ -10,6 +10,7 @@
       <bpmn:lane id="Lane_031f9u4" name="back">
         <bpmn:flowNodeRef>Event_15qyl8t</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_160tj2g</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0icv3zd</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_1tj9moh" name="user" />
     </bpmn:laneSet>
@@ -22,15 +23,46 @@
     <bpmn:dataStoreReference id="DataStoreReference_05d0izj" name="db">
       <bpmn:extensionElements />
     </bpmn:dataStoreReference>
-    <bpmn:task id="Activity_160tj2g">
+    <bpmn:sequenceFlow id="Flow_13ds5f7" sourceRef="Event_15qyl8t" targetRef="Activity_160tj2g" />
+    <bpmn:serviceTask id="Activity_160tj2g" name="fetch last user activity for all users" camunda:expression="${notificationService.getAllStudents(execution)}">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_13ds5f7</bpmn:incoming>
-      <bpmn:property id="Property_05qnizk" name="__targetRef_placeholder" />
+      <bpmn:outgoing>Flow_1vcmxfb</bpmn:outgoing>
+      <bpmn:property id="Property_1jwlkie" name="__targetRef_placeholder" />
       <bpmn:dataInputAssociation id="DataInputAssociation_08r2n1l">
         <bpmn:sourceRef>DataStoreReference_05d0izj</bpmn:sourceRef>
-        <bpmn:targetRef>Property_05qnizk</bpmn:targetRef>
+        <bpmn:targetRef>Property_1jwlkie</bpmn:targetRef>
       </bpmn:dataInputAssociation>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_13ds5f7" sourceRef="Event_15qyl8t" targetRef="Activity_160tj2g" />
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1vcmxfb" sourceRef="Activity_160tj2g" targetRef="Activity_0icv3zd" />
+    <bpmn:subProcess id="Activity_0icv3zd" name="check activity for each user and send email">
+      <bpmn:incoming>Flow_1vcmxfb</bpmn:incoming>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="listStudent" camunda:elementVariable="currentStudent" />
+      <bpmn:startEvent id="Event_0wu95k9" name="sub process start">
+        <bpmn:outgoing>Flow_05wylky</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:sequenceFlow id="Flow_05wylky" sourceRef="Event_0wu95k9" targetRef="Activity_0xlqby7" />
+      <bpmn:sequenceFlow id="Flow_0f5411i" sourceRef="Activity_0xlqby7" targetRef="Gateway_1phtex6" />
+      <bpmn:serviceTask id="Activity_0xlqby7" name="check user activity (&#62;1 min)" camunda:expression="${notificationService.checkInactiveUsers(execution)}" camunda:resultVariable="isInactive">
+        <bpmn:extensionElements>
+          <camunda:field>
+            <camunda:string></camunda:string>
+          </camunda:field>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_05wylky</bpmn:incoming>
+        <bpmn:outgoing>Flow_0f5411i</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:inclusiveGateway id="Gateway_1phtex6" name="Inactive?">
+        <bpmn:incoming>Flow_0f5411i</bpmn:incoming>
+        <bpmn:outgoing>Flow_0geti2d</bpmn:outgoing>
+      </bpmn:inclusiveGateway>
+      <bpmn:task id="Activity_1t1vc2d">
+        <bpmn:incoming>Flow_0geti2d</bpmn:incoming>
+      </bpmn:task>
+      <bpmn:sequenceFlow id="Flow_0geti2d" sourceRef="Gateway_1phtex6" targetRef="Activity_1t1vc2d">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression"></bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+    </bpmn:subProcess>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1rrhoxd">
@@ -58,16 +90,58 @@
           <dc:Bounds x="423" y="101" width="14" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_160tj2g_di" bpmnElement="Activity_160tj2g">
+      <bpmndi:BPMNShape id="Activity_1mo8vzb_di" bpmnElement="Activity_160tj2g">
         <dc:Bounds x="380" y="230" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08iqrrl_di" bpmnElement="Activity_0icv3zd">
+        <dc:Bounds x="590" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_13ds5f7_di" bpmnElement="Flow_13ds5f7">
         <di:waypoint x="278" y="270" />
         <di:waypoint x="380" y="270" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vcmxfb_di" bpmnElement="Flow_1vcmxfb">
+        <di:waypoint x="480" y="270" />
+        <di:waypoint x="590" y="270" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_08r2n1l_di" bpmnElement="DataInputAssociation_08r2n1l">
         <di:waypoint x="430" y="175" />
         <di:waypoint x="430" y="230" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_0tshn2f">
+    <bpmndi:BPMNPlane id="BPMNPlane_1mzkndg" bpmnElement="Activity_0icv3zd">
+      <bpmndi:BPMNShape id="Event_0wu95k9_di" bpmnElement="Event_0wu95k9">
+        <dc:Bounds x="182" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="145" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hjeiwm_di" bpmnElement="Activity_0xlqby7">
+        <dc:Bounds x="310" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0pejkxd_di" bpmnElement="Gateway_1phtex6">
+        <dc:Bounds x="505" y="95" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510" y="152" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1t1vc2d_di" bpmnElement="Activity_1t1vc2d">
+        <dc:Bounds x="650" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_05wylky_di" bpmnElement="Flow_05wylky">
+        <di:waypoint x="218" y="120" />
+        <di:waypoint x="310" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0f5411i_di" bpmnElement="Flow_0f5411i">
+        <di:waypoint x="410" y="120" />
+        <di:waypoint x="505" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0geti2d_di" bpmnElement="Flow_0geti2d">
+        <di:waypoint x="555" y="120" />
+        <di:waypoint x="650" y="120" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
