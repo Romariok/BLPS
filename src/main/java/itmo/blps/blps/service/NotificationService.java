@@ -53,7 +53,7 @@ public class NotificationService {
      * }
      */
 
-    @Scheduled(fixedRate = 30000, initialDelay = 15000) // 0.5 minutes
+    @Scheduled(fixedRate = 30000, initialDelay = 15000000) // 0.5 minutes
     public void notificateTeacher() {
         long ungradedTasks = taskSubmissionRepository.countByGradedAtIsNull();
         if (ungradedTasks > 5) {
