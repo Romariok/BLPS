@@ -23,7 +23,8 @@ import java.time.LocalDateTime;
 public class NotificationService {
 
     private static final long INACTIVITY_THRESHOLD_MINUTES = 1;
-
+    private static final String userTemplateName = "user-inactivity";
+    private static final String teacherTemplateName = "teacher-pending-tasks";
     @Autowired
     private UserRepository userRepository;
 
@@ -35,23 +36,10 @@ public class NotificationService {
 
     @Autowired
     private UserMapper userMapper;
-    /*
-     * @Scheduled(fixedRate = 30000, initialDelay = 10000) // 0.5 minutes
-     * public void notificateUser() {
-     * List<User> inactiveUsers = getInactiveUsers();
-     * for (User user : inactiveUsers) {
-     * Map<String, Object> templateModel = new HashMap<>();
-     * templateModel.put("username", user.getUsername());
-     * templateModel.put("lastActiveTime", user.getLastActiveTime());
-     * 
-     * emailService.sendTemplateMessage(
-     * user.getEmail(),
-     * "We Miss You! - Come Back to Learning",
-     * "user-inactivity",
-     * templateModel);
-     * }
-     * }
-     */
+
+    public long getUnscoredTasksCount() {
+        return taskSubmissionRepository.countByGradedAtIsNull();
+    }
 
     @Scheduled(fixedRate = 30000, initialDelay = 15000000) // 0.5 minutes
     public void notificateTeacher() {
@@ -73,6 +61,12 @@ public class NotificationService {
         }
     }
 
+    public void getAllTeachers(DelegateExecution execution) {
+        List<UserDTO> allTeachers = userRepository.findByRole(Role.TEACHER).stream().map(userMapper::userToUserDTO)
+                .toList();
+        execution.setVariable("listTeacher", allTeachers);
+    }
+
     public void getAllStudents(DelegateExecution execution) {
         List<UserDTO> allStudents = userRepository.findByRole(Role.STUDENT).stream().map(userMapper::userToUserDTO)
                 .toList();
@@ -89,20 +83,25 @@ public class NotificationService {
 
     public void sendNotification(DelegateExecution execution) {
         UserDTO user = (UserDTO) execution.getVariable("currentStudent");
-        String email = user.getEmail();
-        String username = user.getUsername();
-        LocalDateTime lastActiveTime = user.getLastActiveTime();
-        String templateName = "user-inactivity";
+        String userTemplateName = "user-inactivity";
         String subject = "We Miss You! - Come Back to Learning";
-        String message = "Hello " + username + ",\n\n" +
-                "We noticed that you haven't been active on our platform since " + lastActiveTime + ".\n" +
-                "We miss you and would love to see you back!\n\n" +
-                "Best regards,\n" +
-                "Your Learning Platform Team";
         Map<String, Object> templateModel = new HashMap<>();
-        templateModel.put("username", username);
-        templateModel.put("lastActiveTime", lastActiveTime);
-        templateModel.put("message", message);
-        emailService.sendTemplateMessage(email, subject, templateName, templateModel);
+        templateModel.put("username", user.getUsername());
+        templateModel.put("lastActiveTime", user.getLastActiveTime());
+        emailService.sendTemplateMessage(user.getEmail(), subject, userTemplateName, templateModel);
+    }
+
+    public void sendTeacherNotification(DelegateExecution execution) {
+        UserDTO teacher = (UserDTO) execution.getVariable("currentTeacher");
+        long ungradedTasks = (Long) execution.getVariable("unscoredCount");
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("username", teacher.getUsername());
+        templateModel.put("taskCount", ungradedTasks);
+
+        emailService.sendTemplateMessage(
+                teacher.getEmail(),
+                "Tasks Waiting for Review",
+                teacherTemplateName,
+                templateModel);
     }
 }
