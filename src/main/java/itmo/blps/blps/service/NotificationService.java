@@ -83,7 +83,6 @@ public class NotificationService {
 
     public void sendNotification(DelegateExecution execution) {
         UserDTO user = (UserDTO) execution.getVariable("currentStudent");
-        String userTemplateName = "user-inactivity";
         String subject = "We Miss You! - Come Back to Learning";
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("username", user.getUsername());
