@@ -13,7 +13,7 @@
       "description": "enter your token here"
     },
     {
-      "label": "Corse Id",
+      "label": "Course Id",
       "type": "textfield",
       "layout": {
         "row": "Row_1g8ni5a",
@@ -26,7 +26,7 @@
     }
   ],
   "type": "default",
-  "id": "Form_cert_req",
+  "id": "Form_certReq",
   "exporter": {
     "name": "Camunda Modeler",
     "version": "5.34.0"
