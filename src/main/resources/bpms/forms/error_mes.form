@@ -1,0 +1,24 @@
+{
+  "components": [
+    {
+      "label": "Error occured:",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_11dhio8",
+        "columns": null
+      },
+      "id": "Field_0pvn0dh",
+      "key": "error_mes",
+      "readonly": "on"
+    }
+  ],
+  "type": "default",
+  "id": "Form_error_show",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.34.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

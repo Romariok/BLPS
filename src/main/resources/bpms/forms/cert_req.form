@@ -1,14 +1,27 @@
 {
   "components": [
     {
-      "label": "Text field",
+      "label": "auth token",
       "type": "textfield",
       "layout": {
         "row": "Row_1y1tzk9",
         "columns": null
       },
       "id": "Field_1l6jbfj",
-      "key": "textfield_4nmjqo",
+      "key": "jwt_token",
+      "defaultValue": "0",
+      "description": "enter your token here"
+    },
+    {
+      "label": "Corse Id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1g8ni5a",
+        "columns": null
+      },
+      "id": "Field_11h1qv2",
+      "key": "courseId",
+      "description": "Enter course id",
       "defaultValue": "0"
     }
   ],
