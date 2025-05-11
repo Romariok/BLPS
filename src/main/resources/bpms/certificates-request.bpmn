@@ -46,7 +46,7 @@
         <bpmn:sourceRef>DataStoreReference_102yw3y</bpmn:sourceRef>
         <bpmn:targetRef>Property_0e0soi1</bpmn:targetRef>
       </bpmn:dataInputAssociation>
-      <bpmn:callActivity id="Activity_0zu52d5" name="check auth token and fetch authorities" calledElement="Process_AuthToken">
+      <bpmn:callActivity id="Activity_0zu52d5" name="check auth token and fetch authorities" camunda:asyncBefore="true" camunda:asyncAfter="true" calledElement="Process_AuthToken">
         <bpmn:extensionElements>
           <camunda:in source="jwt_token" target="jwt_token" />
           <camunda:out source="userId" target="userId" />

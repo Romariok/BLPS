@@ -12,8 +12,6 @@
       <bpmn:extensionElements>
         <camunda:inputOutput>
           <camunda:inputParameter name="jwt_token">${jwt_token}</camunda:inputParameter>
-          <camunda:outputParameter name="userId">${userId}</camunda:outputParameter>
-          <camunda:outputParameter name="authorities">${authorities}</camunda:outputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_18xr3fo</bpmn:incoming>

@@ -20,7 +20,7 @@ public class JwtTokenValidationDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        String token = (String) execution.getVariable("jwtToken");
+        String token = (String) execution.getVariable("jwt_token");
         if (token != null && jwtUtil.validateToken(token)) {
             String username = jwtUtil.getUsernameFromToken(token);
             Set<String> authorities = jwtUtil.getAuthoritiesFromToken(token);
