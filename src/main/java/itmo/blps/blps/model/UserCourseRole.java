@@ -18,4 +18,9 @@ public class UserCourseRole {
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

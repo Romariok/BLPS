@@ -9,11 +9,7 @@
       <bpmn:outgoing>Flow_18xr3fo</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:serviceTask id="Activity_094onfp" name="check incoming jwt token and give authorities" camunda:delegateExpression="${jwtTokenValidationDelegate}">
-      <bpmn:extensionElements>
-        <camunda:inputOutput>
-          <camunda:inputParameter name="jwt_token">${jwt_token}</camunda:inputParameter>
-        </camunda:inputOutput>
-      </bpmn:extensionElements>
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_18xr3fo</bpmn:incoming>
       <bpmn:outgoing>Flow_175evrr</bpmn:outgoing>
     </bpmn:serviceTask>

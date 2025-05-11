@@ -46,7 +46,7 @@
         <bpmn:sourceRef>DataStoreReference_102yw3y</bpmn:sourceRef>
         <bpmn:targetRef>Property_0e0soi1</bpmn:targetRef>
       </bpmn:dataInputAssociation>
-      <bpmn:callActivity id="Activity_0zu52d5" name="check auth token and fetch authorities" camunda:asyncBefore="true" camunda:asyncAfter="true" calledElement="Process_AuthToken">
+      <bpmn:callActivity id="Activity_0zu52d5" name="check auth token and fetch authorities" calledElement="Process_AuthToken">
         <bpmn:extensionElements>
           <camunda:in source="jwt_token" target="jwt_token" />
           <camunda:out source="userId" target="userId" />
@@ -104,7 +104,7 @@
         <bpmn:incoming>Flow_1367cdx</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1367cdx" sourceRef="Activity_0nyf5wo" targetRef="Event_0mpsjga" />
-      <bpmn:serviceTask id="Activity_0nyf5wo" name="create request" camunda:expression="${certServ.createCertificateRequest(userId,courseID)}">
+      <bpmn:serviceTask id="Activity_0nyf5wo" name="create request" camunda:expression="${certServ.createCertificateRequest(userId,courseId)}">
         <bpmn:incoming>Flow_01ub527</bpmn:incoming>
         <bpmn:outgoing>Flow_1367cdx</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -145,12 +145,12 @@
         <dc:Bounds x="180" y="80" width="1430" height="820" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_1jkkpkb_di" bpmnElement="Lane_1jkkpkb" isHorizontal="true">
-        <dc:Bounds x="210" y="665" width="1400" height="235" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0cjriuo_di" bpmnElement="Lane_0cjriuo" isHorizontal="true">
         <dc:Bounds x="210" y="80" width="1400" height="585" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1jkkpkb_di" bpmnElement="Lane_1jkkpkb" isHorizontal="true">
+        <dc:Bounds x="210" y="665" width="1400" height="235" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1v7ne68_di" bpmnElement="Event_1v7ne68">
@@ -181,11 +181,11 @@
       <bpmndi:BPMNShape id="Activity_0hvw8jf_di" bpmnElement="Activity_0hvw8jf" isExpanded="true">
         <dc:Bounds x="500" y="190" width="1080" height="390" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1pxth9a_di" bpmnElement="Activity_178kcr1">
-        <dc:Bounds x="800" y="220" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0zbcs0m_di" bpmnElement="Activity_0zu52d5">
         <dc:Bounds x="650" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pxth9a_di" bpmnElement="Activity_178kcr1">
+        <dc:Bounds x="800" y="220" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0id09my_di" bpmnElement="Event_0id09my">
         <dc:Bounds x="562" y="242" width="36" height="36" />
@@ -207,6 +207,9 @@
           <dc:Bounds x="1260" y="213" width="41" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1tqwd1z_di" bpmnElement="Event_1ev7z0o">
+        <dc:Bounds x="1522" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0mpsjga_di" bpmnElement="Event_0mpsjga">
         <dc:Bounds x="1522" y="242" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -217,9 +220,6 @@
         <dc:Bounds x="1360" y="220" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1tqwd1z_di" bpmnElement="Event_1ev7z0o">
-        <dc:Bounds x="1522" y="322" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
         <dc:Bounds x="1522" y="502" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -229,10 +229,10 @@
       <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
         <dc:Bounds x="1522" y="382" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_03s83ls_di" bpmnElement="Event_0mtc2pz">
-        <dc:Bounds x="632" y="282" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_09re1k1_di" bpmnElement="Event_09re1k1">
+        <dc:Bounds x="982" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="579" y="325" width="62" height="14" />
+          <dc:Bounds x="909" y="325" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0uzj9bw_di" bpmnElement="Event_1rf2kpt">
@@ -241,23 +241,23 @@
           <dc:Bounds x="787" y="325" width="45" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_09re1k1_di" bpmnElement="Event_09re1k1">
-        <dc:Bounds x="982" y="282" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_03s83ls_di" bpmnElement="Event_0mtc2pz">
+        <dc:Bounds x="632" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="909" y="325" width="82" height="14" />
+          <dc:Bounds x="579" y="325" width="62" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_03popum_di" bpmnElement="Flow_03popum">
         <di:waypoint x="750" y="260" />
         <di:waypoint x="800" y="260" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1mm0n1g_di" bpmnElement="Flow_1mm0n1g">
-        <di:waypoint x="900" y="260" />
-        <di:waypoint x="950" y="260" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0zi6ykg_di" bpmnElement="Flow_0zi6ykg">
         <di:waypoint x="598" y="260" />
         <di:waypoint x="650" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mm0n1g_di" bpmnElement="Flow_1mm0n1g">
+        <di:waypoint x="900" y="260" />
+        <di:waypoint x="950" y="260" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0bo78ym_di" bpmnElement="Flow_0bo78ym">
         <di:waypoint x="1050" y="260" />

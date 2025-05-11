@@ -22,4 +22,9 @@ public class RolePermission {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Permission permission;
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

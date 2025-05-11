@@ -37,4 +37,9 @@ public class PaymentHistory {
    @Enumerated(EnumType.STRING)
    @Column(nullable = false)
    private PaymentStatus status;
+
+   @Override
+   public int hashCode() {
+      return id.hashCode();
+   }
 }

@@ -1,17 +1,13 @@
 {
   "components": [
     {
-      "label": "Message",
-      "type": "textfield",
+      "text": "# WRONG CREDENTIALS BRO",
+      "type": "text",
       "layout": {
-        "row": "Row_0vku6pf",
+        "row": "Row_1uiug3o",
         "columns": null
       },
-      "id": "Field_1l9lwxh",
-      "key": "textfield_odn33a",
-      "defaultValue": "WRONG CREDENTIALS BRO",
-      "readonly": "on",
-      "description": "READ THIS"
+      "id": "Field_1m1ph34"
     }
   ],
   "type": "default",

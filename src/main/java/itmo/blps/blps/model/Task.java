@@ -28,4 +28,9 @@ public class Task {
     private String correctAnswer; // For automatic checking (multiple choice/checkbox)
 
     private Integer maxScore;
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

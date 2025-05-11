@@ -1,16 +1,31 @@
 {
   "components": [
     {
-      "label": "Your auth token",
-      "type": "textfield",
+      "text": "# Your auth token:",
+      "type": "text",
       "layout": {
-        "row": "Row_11dhio8",
+        "row": "Row_0lbeygh",
         "columns": null
       },
-      "id": "Field_0pvn0dh",
-      "key": "jwt_token_show",
-      "readonly": "on",
-      "description": "Copy and save it"
+      "id": "Field_1emymt9"
+    },
+    {
+      "text": "# {{jwt_token_show}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_02arsa9",
+        "columns": null
+      },
+      "id": "Field_1nxzglt"
+    },
+    {
+      "text": "# Copy and save it for requests",
+      "type": "text",
+      "layout": {
+        "row": "Row_18hm9q7",
+        "columns": null
+      },
+      "id": "Field_0jb2xc3"
     }
   ],
   "type": "default",

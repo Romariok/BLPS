@@ -1,10 +1,19 @@
 {
   "components": [
     {
-      "label": "Error occured:",
-      "type": "textfield",
+      "text": "# Error occured:",
+      "type": "text",
       "layout": {
         "row": "Row_11dhio8",
+        "columns": null
+      },
+      "id": "Field_16r8aff"
+    },
+    {
+      "label": "",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1xfn08i",
         "columns": null
       },
       "id": "Field_0pvn0dh",

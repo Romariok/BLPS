@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import itmo.blps.blps.model.CertificateRequest;
+import itmo.blps.blps.model.Course;
 import itmo.blps.blps.model.Permission;
 import itmo.blps.blps.repository.CertificateRequestRepository;
 import itmo.blps.blps.repository.CourseRepository;
@@ -29,15 +30,16 @@ public class CertificateServiceBpms {
     private CertificateRequestRepository certificateRequestRepository;
 
     public void isExistingCourse(Long courseId) {
-        if(!courseRepository.existsById(courseId)){
+        if (!courseRepository.existsById(courseId)) {
             throw new BpmnError("404");
-        };
+        }
+        ;
     }
 
     @SuppressWarnings("unchecked")
-    public void checkAuthority(DelegateExecution execution){
+    public void checkAuthority(DelegateExecution execution) {
         Set<String> authorities = (Set<String>) execution.getVariable("authorities");
-        if(authorities == null || !authorities.contains(Permission.VIEW_CERTIFICATE.toString())){
+        if (authorities == null || !authorities.contains(Permission.VIEW_CERTIFICATE.toString())) {
             log.info("\n\n\n\n\nAUTHORITIES: ");
             if (authorities != null) {
                 authorities.forEach(auth -> log.info(auth));
@@ -48,9 +50,10 @@ public class CertificateServiceBpms {
     }
 
     public boolean areAllTaskDone(Long courseId, Long userId) {
-        boolean allTasksCompleted = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Unchecked existance of course"))
-                .getTasks()
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Unchecked existence of course"));
+
+        return new java.util.HashSet<>(course.getTasks())
                 .stream()
                 .allMatch(task -> {
                     var submission = submissionRepository
@@ -60,7 +63,6 @@ public class CertificateServiceBpms {
                     return submission != null && submission.getScore() != null
                             && submission.getScore() >= task.getMaxScore() * threshold;
                 });
-        return allTasksCompleted;
     }
 
     public void createCertificateRequest(Long userId, Long courseId) {
@@ -74,6 +76,6 @@ public class CertificateServiceBpms {
         certificateRequest.setStudent(student);
         certificateRequest.setRequestedAt(java.time.LocalDateTime.now());
         certificateRequest.setStatus(itmo.blps.blps.model.CertificateRequestStatus.IN_PROGRESS);
-        log.info("Certificate request created: {}", certificateRequest);
+        certificateRequestRepository.save(certificateRequest);
     }
 }

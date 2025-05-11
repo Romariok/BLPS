@@ -25,4 +25,9 @@ public class CertificateRequest {
 
     @Enumerated(EnumType.STRING)
     private CertificateRequestStatus status;
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

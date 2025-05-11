@@ -34,4 +34,9 @@ public class TaskSubmission {
     private User teacher;
 
     private boolean automaticallyGraded;
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
