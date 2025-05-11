@@ -8,12 +8,10 @@ import itmo.blps.blps.dto.UserDTO;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import itmo.blps.blps.mapper.UserMapper;
 import itmo.blps.blps.model.Role;
-import itmo.blps.blps.model.User;
 import itmo.blps.blps.repository.TaskSubmissionRepository;
 import itmo.blps.blps.repository.UserRepository;
 
@@ -39,26 +37,6 @@ public class NotificationService {
 
     public long getUnscoredTasksCount() {
         return taskSubmissionRepository.countByGradedAtIsNull();
-    }
-
-    @Scheduled(fixedRate = 30000, initialDelay = 15000000) // 0.5 minutes
-    public void notificateTeacher() {
-        long ungradedTasks = taskSubmissionRepository.countByGradedAtIsNull();
-        if (ungradedTasks > 5) {
-            List<User> teachers = userRepository.findByRole(Role.TEACHER);
-
-            for (User teacher : teachers) {
-                Map<String, Object> templateModel = new HashMap<>();
-                templateModel.put("username", teacher.getUsername());
-                templateModel.put("taskCount", ungradedTasks);
-
-                emailService.sendTemplateMessage(
-                        teacher.getEmail(),
-                        "Tasks Waiting for Review",
-                        "teacher-pending-tasks",
-                        templateModel);
-            }
-        }
     }
 
     public void getAllTeachers(DelegateExecution execution) {

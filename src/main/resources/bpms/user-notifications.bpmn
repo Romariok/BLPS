@@ -2,10 +2,10 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1wpqw70" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
   <bpmn:collaboration id="Collaboration_1rrhoxd">
     <bpmn:extensionElements />
-    <bpmn:participant id="Participant_0cyeddt" name="inactive user notification" processRef="Process_0jc9j0x" />
-    <bpmn:participant id="Participant_1uvck1m" name="teacher notification" processRef="Process_0pbvqos" />
+    <bpmn:participant id="Participant_0cyeddt" name="inactive user notification" processRef="Process_Notification_student" />
+    <bpmn:participant id="Participant_1uvck1m" name="teacher notification" processRef="Process_Notification_teacher" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_0jc9j0x" isExecutable="true" camunda:historyTimeToLive="1">
+  <bpmn:process id="Process_Notification_student" isExecutable="true" camunda:historyTimeToLive="1">
     <bpmn:extensionElements />
     <bpmn:laneSet id="LaneSet_0ftj5w5">
       <bpmn:lane id="Lane_031f9u4" name="back">
@@ -82,7 +82,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_197g5pp" sourceRef="Activity_0icv3zd" targetRef="Event_0huznyo" />
   </bpmn:process>
-  <bpmn:process id="Process_0pbvqos" isExecutable="true" camunda:historyTimeToLive="1">
+  <bpmn:process id="Process_Notification_teacher" isExecutable="true" camunda:historyTimeToLive="1">
     <bpmn:laneSet id="LaneSet_0lxqpww">
       <bpmn:lane id="Lane_166wfr4" name="back">
         <bpmn:flowNodeRef>Event_13tkbpq</bpmn:flowNodeRef>
@@ -172,15 +172,15 @@
       <bpmndi:BPMNShape id="Activity_1mo8vzb_di" bpmnElement="Activity_160tj2g">
         <dc:Bounds x="380" y="230" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_08iqrrl_di" bpmnElement="Activity_0icv3zd">
+        <dc:Bounds x="590" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0huznyo_di" bpmnElement="Event_0huznyo">
         <dc:Bounds x="802" y="252" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="777" y="295" width="86" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_08iqrrl_di" bpmnElement="Activity_0icv3zd">
-        <dc:Bounds x="590" y="230" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_13ds5f7_di" bpmnElement="Flow_13ds5f7">
         <di:waypoint x="278" y="270" />

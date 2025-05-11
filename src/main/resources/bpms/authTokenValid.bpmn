@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_02wt0wp" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
   <bpmn:collaboration id="Collaboration_1b1mf36">
-    <bpmn:participant id="Participant_1825dvq" name="check jwt token" processRef="Process_1mazqg6" />
+    <bpmn:participant id="Participant_1825dvq" name="check jwt token" processRef="Process_AuthToken" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_1mazqg6" isExecutable="true" camunda:historyTimeToLive="1">
+  <bpmn:process id="Process_AuthToken" isExecutable="true" camunda:historyTimeToLive="1">
     <bpmn:startEvent id="StartEvent_1" name="calling this process">
       <bpmn:extensionElements />
       <bpmn:outgoing>Flow_18xr3fo</bpmn:outgoing>
@@ -34,7 +34,7 @@
     <bpmn:sequenceFlow id="Flow_175evrr" sourceRef="Activity_094onfp" targetRef="Event_1kcgbpn" />
     <bpmn:sequenceFlow id="Flow_19qtnsu" sourceRef="Event_0d57arc" targetRef="Event_03hq5il" />
   </bpmn:process>
-  <bpmn:error id="Error_1nzoy55" name="UNAUTHORIZED" errorCode="403" camunda:errorMessage="UNAUTHORIZED" />
+  <bpmn:error id="Error_1nzoy55" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="UNAUTHORIZED" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1b1mf36">
       <bpmndi:BPMNShape id="Participant_1825dvq_di" bpmnElement="Participant_1825dvq" isHorizontal="true">
