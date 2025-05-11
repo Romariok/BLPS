@@ -17,7 +17,7 @@
         <bpmn:flowNodeRef>Event_1j2e4n7</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="Event_1v7ne68" name="wants to apply for certificate" camunda:formRef="cert_req" camunda:formRefBinding="latest">
+    <bpmn:startEvent id="Event_1v7ne68" name="wants to apply for certificate">
       <bpmn:extensionElements />
       <bpmn:outgoing>Flow_0ya0pin</bpmn:outgoing>
     </bpmn:startEvent>
