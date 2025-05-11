@@ -246,12 +246,6 @@ public class DataInitializerRunner {
 
             // Create certificate requests
             createCertificateRequest(
-                    student1,
-                    javaCourse,
-                    LocalDateTime.now().minusDays(2),
-                    CertificateRequestStatus.IN_PROGRESS);
-
-            createCertificateRequest(
                     student2,
                     javaCourse,
                     LocalDateTime.now().minusDays(1),
