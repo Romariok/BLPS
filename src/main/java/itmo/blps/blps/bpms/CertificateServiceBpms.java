@@ -14,7 +14,6 @@ import itmo.blps.blps.repository.CertificateRequestRepository;
 import itmo.blps.blps.repository.CourseRepository;
 import itmo.blps.blps.repository.TaskSubmissionRepository;
 import itmo.blps.blps.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 
 @Service("certServ")
 public class CertificateServiceBpms {
