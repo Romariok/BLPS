@@ -16,7 +16,6 @@ import itmo.blps.blps.repository.TaskSubmissionRepository;
 import itmo.blps.blps.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service("certServ")
 public class CertificateServiceBpms {
     private static final float threshold = 0.6f;
@@ -40,11 +39,6 @@ public class CertificateServiceBpms {
     public void checkAuthority(DelegateExecution execution) {
         Set<String> authorities = (Set<String>) execution.getVariable("authorities");
         if (authorities == null || !authorities.contains(Permission.VIEW_CERTIFICATE.toString())) {
-            log.info("\n\n\n\n\nAUTHORITIES: ");
-            if (authorities != null) {
-                authorities.forEach(auth -> log.info(auth));
-            }
-            log.info("\n\n\n\n\n");
             throw new BpmnError("403");
         }
     }

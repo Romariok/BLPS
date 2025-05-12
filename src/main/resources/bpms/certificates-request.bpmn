@@ -135,10 +135,10 @@
     <bpmn:sequenceFlow id="Flow_1kyvj1i" sourceRef="Activity_0hvw8jf" targetRef="Gateway_1er411u" />
     <bpmn:sequenceFlow id="Flow_1b8sgg2" sourceRef="Gateway_1er411u" targetRef="Event_158xvge" />
   </bpmn:process>
-  <bpmn:error id="Error_12061rg" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="UNAUTHORIZED" />
-  <bpmn:error id="Error_19czwrh" name="FORBIDDEN" errorCode="403" camunda:errorMessage="FORBIDDEN" />
-  <bpmn:error id="Error_0n0ytgi" name="NOT_FOUND" errorCode="404" camunda:errorMessage="NOT_FOUND" />
-  <bpmn:error id="Error_1vg3xif" name="BAD REQUEST" errorCode="400" camunda:errorMessage="BAD REQUEST" />
+  <bpmn:error id="Error_12061rg" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
+  <bpmn:error id="Error_19czwrh" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
+  <bpmn:error id="Error_0n0ytgi" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Course wasn&#39;t found" />
+  <bpmn:error id="Error_1vg3xif" name="BAD REQUEST" errorCode="400" camunda:errorMessage="You didn&#39;t complete enough tasks to acquire certificate" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0f9vv0h">
       <bpmndi:BPMNShape id="Participant_1naslp9_di" bpmnElement="Participant_1naslp9" isHorizontal="true">
