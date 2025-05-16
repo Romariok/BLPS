@@ -1,0 +1,48 @@
+{
+  "components": [
+    {
+      "label": "auth token",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1lq4uff",
+        "columns": null
+      },
+      "id": "Field_0bjiwdt",
+      "key": "jwt_token",
+      "description": "enter your token here",
+      "defaultValue": "0"
+    },
+    {
+      "label": "Request Id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_09ed6c1",
+        "columns": null
+      },
+      "id": "Field_1t58aho",
+      "key": "requestId",
+      "description": "enter request id here",
+      "defaultValue": "0"
+    },
+    {
+      "label": "Approve request?",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_03n45mm",
+        "columns": null
+      },
+      "id": "Field_12hl9zr",
+      "key": "approved",
+      "defaultValue": true
+    }
+  ],
+  "type": "default",
+  "id": "Form_RequestProcess",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

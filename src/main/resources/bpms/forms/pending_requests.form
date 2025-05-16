@@ -1,0 +1,31 @@
+{
+  "components": [
+    {
+      "text": "# Лист желающих получить сертификат",
+      "type": "text",
+      "layout": {
+        "row": "Row_12fg95s",
+        "columns": null
+      },
+      "id": "Field_0nj1im1"
+    },
+    {
+      "text": "{{pendingRequests}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_05vcgu5",
+        "columns": null
+      },
+      "id": "Field_12zcg1c"
+    }
+  ],
+  "type": "default",
+  "id": "Form_PendingRequests",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_13cecwv" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.34.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_13cecwv" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.35.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
   <bpmn:collaboration id="Collaboration_0f9vv0h">
     <bpmn:participant id="Participant_1naslp9" name="certificate request apply" processRef="Process_certificate_request" />
   </bpmn:collaboration>
@@ -99,7 +99,7 @@
         <bpmn:incoming>Flow_0g2bqjc</bpmn:incoming>
         <bpmn:errorEventDefinition id="ErrorEventDefinition_0w53w6q" errorRef="Error_1vg3xif" />
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_01ub527" sourceRef="Gateway_08ad1wi" targetRef="Activity_0nyf5wo" />
+      <bpmn:sequenceFlow id="Flow_01ub527" name="yes" sourceRef="Gateway_08ad1wi" targetRef="Activity_0nyf5wo" />
       <bpmn:endEvent id="Event_0mpsjga" name="tx success">
         <bpmn:incoming>Flow_1367cdx</bpmn:incoming>
       </bpmn:endEvent>
@@ -278,6 +278,9 @@
       <bpmndi:BPMNEdge id="Flow_01ub527_di" bpmnElement="Flow_01ub527">
         <di:waypoint x="1305" y="260" />
         <di:waypoint x="1360" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1324" y="242" width="17" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1367cdx_di" bpmnElement="Flow_1367cdx">
         <di:waypoint x="1460" y="260" />

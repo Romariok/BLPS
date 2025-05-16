@@ -1,0 +1,31 @@
+{
+  "components": [
+    {
+      "text": "# Статус зявки на получение сертификата по курсу {{courseId}} для студента {{userId}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_1t8t8ks",
+        "columns": null
+      },
+      "id": "Field_0jzagwr"
+    },
+    {
+      "text": "# {{requestStatus}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_0xi8lzu",
+        "columns": null
+      },
+      "id": "Field_0j0xv26"
+    }
+  ],
+  "type": "default",
+  "id": "Form_SertificateRequestStatus",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}
