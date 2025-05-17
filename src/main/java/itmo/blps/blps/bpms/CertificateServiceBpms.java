@@ -17,7 +17,6 @@ import itmo.blps.blps.repository.TaskSubmissionRepository;
 import itmo.blps.blps.repository.UserRepository;
 import itmo.blps.blps.service.JmsProducerService;
 import itmo.blps.blps.dto.CertificateRequestJmsDTO;
-import itmo.blps.blps.dto.CertificateRequestResponseDTO;
 import itmo.blps.blps.mapper.CertificateMapper;
 
 @Service("certServ")

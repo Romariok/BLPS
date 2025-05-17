@@ -175,13 +175,4 @@ public class CourseEnrollmentService {
                         throw e;
                 }
         }
-
-        @Transactional(readOnly = true)
-        public boolean isCourseAvailable(Long courseId) {
-                return courseRepository.findById(courseId)
-                                .map(course -> course.isAvailable() &&
-                                                (course.getMaxStudents() == null ||
-                                                                course.getCurrentStudents() < course.getMaxStudents()))
-                                .orElse(false);
-        }
 }

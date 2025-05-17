@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1vx7i5q" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.35.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
+  <bpmn:error id="Error_17fzefj" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
+  <bpmn:error id="Error_19yjde5" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
+  <bpmn:error id="Error_1vwr634" name="INVALID_STATUS" errorCode="400" camunda:errorMessage="Can only process requests that are in progress" />
+  <bpmn:error id="Error_0tal3kp" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Sertificate request wasn&#39;t found" />
+  <bpmn:error id="Error_029wxm4" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
+  <bpmn:error id="Error_0yqml9x" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
+  <bpmn:error id="Error_09s4kpc" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Sertificate request wasn&#39;t found" />
+  <bpmn:error id="Error_0j9f2pa" name="INVALID_STATUS" errorCode="400" camunda:errorMessage="Can only process requests that are in progress" />
+  <bpmn:collaboration id="Collaboration_0xl9xj5">
+    <bpmn:participant id="Participant_1naslp9" name="enroll in course" processRef="Process_CourseEnrollment" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_CourseEnrollment" isExecutable="true" camunda:historyTimeToLive="1">
+    <bpmn:laneSet id="LaneSet_1bvkh8s">
+      <bpmn:lane id="Lane_1jkkpkb" name="user">
+        <bpmn:flowNodeRef>Event_1v7ne68</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1uo9mdu</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1s5b0kf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1er411u</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_158xvge</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0cjriuo" name="back">
+        <bpmn:flowNodeRef>Activity_0hvw8jf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1j2e4n7</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_1v7ne68" name="wants to enroll in course">
+      <bpmn:outgoing>Flow_0ya0pin</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Activity_1uo9mdu" name="enter auth token and course id" camunda:formRef="Form_certReq" camunda:formRefBinding="latest">
+      <bpmn:incoming>Flow_0ya0pin</bpmn:incoming>
+      <bpmn:outgoing>Flow_107ojw3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1s5b0kf" name="show error to user" camunda:formRef="Form_error_show" camunda:formRefBinding="latest">
+      <bpmn:incoming>Flow_1b38rwo</bpmn:incoming>
+      <bpmn:outgoing>Flow_0z3tws2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1er411u">
+      <bpmn:incoming>Flow_0z3tws2</bpmn:incoming>
+      <bpmn:incoming>Flow_1kyvj1i</bpmn:incoming>
+      <bpmn:outgoing>Flow_1b8sgg2</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0ya0pin" sourceRef="Event_1v7ne68" targetRef="Activity_1uo9mdu" />
+    <bpmn:sequenceFlow id="Flow_107ojw3" sourceRef="Activity_1uo9mdu" targetRef="Activity_0hvw8jf" />
+    <bpmn:sequenceFlow id="Flow_1b38rwo" sourceRef="Event_1j2e4n7" targetRef="Activity_1s5b0kf" />
+    <bpmn:sequenceFlow id="Flow_0z3tws2" sourceRef="Activity_1s5b0kf" targetRef="Gateway_1er411u" />
+    <bpmn:sequenceFlow id="Flow_1kyvj1i" sourceRef="Activity_0hvw8jf" targetRef="Gateway_1er411u" />
+    <bpmn:sequenceFlow id="Flow_1b8sgg2" sourceRef="Gateway_1er411u" targetRef="Event_158xvge" />
+    <bpmn:endEvent id="Event_158xvge">
+      <bpmn:incoming>Flow_1b8sgg2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:transaction id="Activity_0hvw8jf">
+      <bpmn:incoming>Flow_107ojw3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kyvj1i</bpmn:outgoing>
+      <bpmn:property id="Property_0e0soi1" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1rb3g6t">
+        <bpmn:sourceRef>DataStoreReference_102yw3y</bpmn:sourceRef>
+        <bpmn:targetRef>Property_0e0soi1</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+      <bpmn:callActivity id="Activity_0zu52d5" name="check auth token and fetch authorities" calledElement="Process_AuthToken">
+        <bpmn:extensionElements>
+          <camunda:in source="jwt_token" target="jwt_token" />
+          <camunda:out source="userId" target="userId" />
+          <camunda:out source="authorities" target="authorities" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0zi6ykg</bpmn:incoming>
+        <bpmn:outgoing>Flow_03popum</bpmn:outgoing>
+      </bpmn:callActivity>
+      <bpmn:serviceTask id="Activity_178kcr1" name="check authority" camunda:expression="${courseServ.checkBaseCourseAuthority(execution)}">
+        <bpmn:incoming>Flow_03popum</bpmn:incoming>
+        <bpmn:outgoing>Flow_1mm0n1g</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:startEvent id="Event_0id09my" name="start transaction">
+        <bpmn:outgoing>Flow_0zi6ykg</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="Activity_04feq56" name="check course availability" camunda:expression="${courseServ.checkCourseAvailability(courseId)}">
+        <bpmn:incoming>Flow_1mm0n1g</bpmn:incoming>
+        <bpmn:outgoing>Flow_0bo78ym</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:serviceTask id="Activity_0betj7t" name="enroll in course" camunda:expression="${courseServ.enrollInCourse(userId, courseId)}" camunda:resultVariable="pendingRequests">
+        <bpmn:incoming>Flow_0bo78ym</bpmn:incoming>
+        <bpmn:outgoing>Flow_1x87grq</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:endEvent id="Event_0mpsjga" name="tx success">
+        <bpmn:incoming>Flow_1x87grq</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:endEvent id="Event_12glwyy">
+        <bpmn:incoming>Flow_0om6bl0</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1m4jnzz" errorRef="Error_12061rg" />
+      </bpmn:endEvent>
+      <bpmn:endEvent id="Event_1pkielr">
+        <bpmn:incoming>Flow_0fh1rpi</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_13j2kru" errorRef="Error_19czwrh" />
+      </bpmn:endEvent>
+      <bpmn:endEvent id="Event_0lf3ut1">
+        <bpmn:incoming>Flow_0kk4n2x</bpmn:incoming>
+        <bpmn:incoming>Flow_1gffouz</bpmn:incoming>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1kb0rzv" errorRef="Error_07fak0o" />
+      </bpmn:endEvent>
+      <bpmn:boundaryEvent id="Event_0mtc2pz" name="invalid token" attachedToRef="Activity_0zu52d5">
+        <bpmn:outgoing>Flow_0om6bl0</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ocbxdj" errorRef="Error_0abrnvz" camunda:errorMessageVariable="error_mes" />
+      </bpmn:boundaryEvent>
+      <bpmn:boundaryEvent id="Event_1rf2kpt" name="forbidden" attachedToRef="Activity_178kcr1">
+        <bpmn:outgoing>Flow_0fh1rpi</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0o1g2cj" errorRef="Error_11p65cn" camunda:errorMessageVariable="error_mes" />
+      </bpmn:boundaryEvent>
+      <bpmn:boundaryEvent id="Event_09re1k1" name="course is unavailable" attachedToRef="Activity_04feq56">
+        <bpmn:outgoing>Flow_0kk4n2x</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1wl72wd" errorRef="Error_07fak0o" camunda:errorMessageVariable="error_mes" />
+      </bpmn:boundaryEvent>
+      <bpmn:sequenceFlow id="Flow_0zi6ykg" sourceRef="Event_0id09my" targetRef="Activity_0zu52d5" />
+      <bpmn:sequenceFlow id="Flow_03popum" sourceRef="Activity_0zu52d5" targetRef="Activity_178kcr1" />
+      <bpmn:sequenceFlow id="Flow_1mm0n1g" sourceRef="Activity_178kcr1" targetRef="Activity_04feq56" />
+      <bpmn:sequenceFlow id="Flow_0bo78ym" sourceRef="Activity_04feq56" targetRef="Activity_0betj7t" />
+      <bpmn:sequenceFlow id="Flow_1x87grq" sourceRef="Activity_0betj7t" targetRef="Event_0mpsjga" />
+      <bpmn:sequenceFlow id="Flow_0om6bl0" sourceRef="Event_0mtc2pz" targetRef="Event_12glwyy" />
+      <bpmn:sequenceFlow id="Flow_0fh1rpi" sourceRef="Event_1rf2kpt" targetRef="Event_1pkielr" />
+      <bpmn:sequenceFlow id="Flow_0kk4n2x" sourceRef="Event_09re1k1" targetRef="Event_0lf3ut1" />
+      <bpmn:boundaryEvent id="Event_1n1t927" name="course is unavailable" attachedToRef="Activity_0betj7t">
+        <bpmn:outgoing>Flow_1gffouz</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1q9ljfz" errorRef="Error_07fak0o" camunda:errorMessageVariable="error_mes" />
+      </bpmn:boundaryEvent>
+      <bpmn:sequenceFlow id="Flow_1gffouz" sourceRef="Event_1n1t927" targetRef="Event_0lf3ut1" />
+    </bpmn:transaction>
+    <bpmn:boundaryEvent id="Event_1j2e4n7" name="error" attachedToRef="Activity_0hvw8jf">
+      <bpmn:outgoing>Flow_1b38rwo</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1qy4nvt" camunda:errorMessageVariable="error_mes" />
+    </bpmn:boundaryEvent>
+    <bpmn:dataStoreReference id="DataStoreReference_102yw3y" name="skillbox_db" />
+  </bpmn:process>
+  <bpmn:error id="Error_12061rg" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
+  <bpmn:error id="Error_19czwrh" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
+  <bpmn:error id="Error_0n0ytgi" name="COURSE_FULL" errorCode="400" camunda:errorMessage="This course has reached its maximum capacity" />
+  <bpmn:error id="Error_0abrnvz" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
+  <bpmn:error id="Error_11p65cn" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
+  <bpmn:error id="Error_07fak0o" name="COURSE_UNAVAILABLE" errorCode="400" camunda:errorMessage="The course is unavailable" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0xl9xj5">
+      <bpmndi:BPMNShape id="Participant_1naslp9_di" bpmnElement="Participant_1naslp9" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1420" height="890" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1jkkpkb_di" bpmnElement="Lane_1jkkpkb" isHorizontal="true">
+        <dc:Bounds x="190" y="735" width="1390" height="235" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0cjriuo_di" bpmnElement="Lane_0cjriuo" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1390" height="655" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1v7ne68_di" bpmnElement="Event_1v7ne68">
+        <dc:Bounds x="252" y="872" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="230" y="915" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1dwhjny_di" bpmnElement="Activity_1uo9mdu">
+        <dc:Bounds x="340" y="850" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wtbpdj_di" bpmnElement="Activity_1s5b0kf">
+        <dc:Bounds x="610" y="850" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1er411u_di" bpmnElement="Gateway_1er411u" isMarkerVisible="true">
+        <dc:Bounds x="1295" y="865" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_158xvge_di" bpmnElement="Event_158xvge">
+        <dc:Bounds x="1472" y="872" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataStoreReference_102yw3y_di" bpmnElement="DataStoreReference_102yw3y">
+        <dc:Bounds x="995" y="105" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="992" y="93" width="56" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hvw8jf_di" bpmnElement="Activity_0hvw8jf" isExpanded="true">
+        <dc:Bounds x="580" y="190" width="930" height="510" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zbcs0m_di" bpmnElement="Activity_0zu52d5">
+        <dc:Bounds x="730" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pxth9a_di" bpmnElement="Activity_178kcr1">
+        <dc:Bounds x="880" y="250" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0id09my_di" bpmnElement="Event_0id09my">
+        <dc:Bounds x="642" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="621" y="315" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1sev0iq_di" bpmnElement="Activity_04feq56">
+        <dc:Bounds x="1030" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_098dlxr_di" bpmnElement="Activity_0betj7t">
+        <dc:Bounds x="1200" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mpsjga_di" bpmnElement="Event_0mpsjga">
+        <dc:Bounds x="1402" y="272" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1395" y="315" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
+        <dc:Bounds x="1402" y="522" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mc7bqm_di" bpmnElement="Event_1pkielr">
+        <dc:Bounds x="1402" y="582" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
+        <dc:Bounds x="1402" y="642" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_03s83ls_di" bpmnElement="Event_0mtc2pz">
+        <dc:Bounds x="712" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="659" y="355" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0uzj9bw_di" bpmnElement="Event_1rf2kpt">
+        <dc:Bounds x="912" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="867" y="355" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_09re1k1_di" bpmnElement="Event_09re1k1">
+        <dc:Bounds x="1062" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1003" y="373" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1p8ayuz" bpmnElement="Event_1n1t927">
+        <dc:Bounds x="1222" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1162" y="373" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0zi6ykg_di" bpmnElement="Flow_0zi6ykg">
+        <di:waypoint x="678" y="290" />
+        <di:waypoint x="730" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03popum_di" bpmnElement="Flow_03popum">
+        <di:waypoint x="830" y="290" />
+        <di:waypoint x="880" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1mm0n1g_di" bpmnElement="Flow_1mm0n1g">
+        <di:waypoint x="980" y="290" />
+        <di:waypoint x="1030" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0bo78ym_di" bpmnElement="Flow_0bo78ym">
+        <di:waypoint x="1130" y="290" />
+        <di:waypoint x="1200" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x87grq_di" bpmnElement="Flow_1x87grq">
+        <di:waypoint x="1300" y="290" />
+        <di:waypoint x="1402" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kk4n2x_di" bpmnElement="Flow_0kk4n2x">
+        <di:waypoint x="1080" y="348" />
+        <di:waypoint x="1080" y="540" />
+        <di:waypoint x="1402" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gffouz_di" bpmnElement="Flow_1gffouz">
+        <di:waypoint x="1240" y="348" />
+        <di:waypoint x="1240" y="540" />
+        <di:waypoint x="1402" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fh1rpi_di" bpmnElement="Flow_0fh1rpi">
+        <di:waypoint x="930" y="348" />
+        <di:waypoint x="930" y="600" />
+        <di:waypoint x="1402" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0om6bl0_di" bpmnElement="Flow_0om6bl0">
+        <di:waypoint x="730" y="348" />
+        <di:waypoint x="730" y="660" />
+        <di:waypoint x="1402" y="660" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1j2e4n7_di" bpmnElement="Event_1j2e4n7">
+        <dc:Bounds x="642" y="682" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="607" y="718" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0ya0pin_di" bpmnElement="Flow_0ya0pin">
+        <di:waypoint x="288" y="890" />
+        <di:waypoint x="340" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_107ojw3_di" bpmnElement="Flow_107ojw3">
+        <di:waypoint x="440" y="890" />
+        <di:waypoint x="460" y="890" />
+        <di:waypoint x="460" y="380" />
+        <di:waypoint x="580" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b38rwo_di" bpmnElement="Flow_1b38rwo">
+        <di:waypoint x="660" y="718" />
+        <di:waypoint x="660" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0z3tws2_di" bpmnElement="Flow_0z3tws2">
+        <di:waypoint x="710" y="890" />
+        <di:waypoint x="1295" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kyvj1i_di" bpmnElement="Flow_1kyvj1i">
+        <di:waypoint x="1320" y="700" />
+        <di:waypoint x="1320" y="865" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b8sgg2_di" bpmnElement="Flow_1b8sgg2">
+        <di:waypoint x="1345" y="890" />
+        <di:waypoint x="1472" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1rb3g6t_di" bpmnElement="DataInputAssociation_1rb3g6t">
+        <di:waypoint x="1020" y="155" />
+        <di:waypoint x="1020" y="190" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
