@@ -129,7 +129,7 @@ public class TaskServiceBpms {
 
       Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new BpmnError(
-                  "404"));
+                  "500"));
 
       boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
 
