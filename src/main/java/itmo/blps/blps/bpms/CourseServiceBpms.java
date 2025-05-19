@@ -98,6 +98,7 @@ public class CourseServiceBpms {
          payment.setStatus(PaymentStatus.FAILED);
          payment.setCompletedAt(LocalDateTime.now());
          paymentHistoryRepository.save(payment);
+         refundPayment(payment);
          throw new BpmnError("402");
       }
       payment.setStatus(PaymentStatus.SUCCESSFUL);
