@@ -13,7 +13,6 @@ import itmo.blps.blps.model.Course;
 import itmo.blps.blps.model.PaymentHistory;
 import itmo.blps.blps.model.PaymentStatus;
 import itmo.blps.blps.model.Permission;
-import itmo.blps.blps.model.Role;
 import itmo.blps.blps.model.User;
 import itmo.blps.blps.model.UserCourseRole;
 import itmo.blps.blps.repository.CourseRepository;
@@ -51,33 +50,16 @@ public class CourseServiceBpms {
       }
 
       if (course.getMaxStudents() != null && course.getCurrentStudents() >= course.getMaxStudents()) {
-         throw new BpmnError("400");
+         throw new BpmnError("409");
       }
    }
 
    public void enrollInCourse(Long userId, Long courseId) {
-      if (userCourseRoleRepository.existsByUserIdAndCourseId(userId, courseId)) {
-         throw new BpmnError("400");
-      }
-
       Course course = courseRepository.findById(courseId)
-            .orElseThrow(() -> new BpmnError("400"));
+            .orElseThrow(() -> new BpmnError("500"));
 
       User user = userRepository.findById(userId)
-            .orElseThrow(() -> new BpmnError("400"));
-
-      if (!course.isAvailable()) {
-         throw new BpmnError("400");
-      }
-
-      if (user.getRole() != Role.STUDENT) {
-         throw new BpmnError("400");
-      }
-
-      // Проверка на максимальное количество студентов
-      if (course.getMaxStudents() != null && course.getCurrentStudents() >= course.getMaxStudents()) {
-         throw new BpmnError("400");
-      }
+            .orElseThrow(() -> new BpmnError("500"));
 
       // Сохраняем платеж и получаем его объект
       PaymentHistory payment = null;
@@ -92,7 +74,7 @@ public class CourseServiceBpms {
          if (payment != null) {
             refundPayment(payment);
          }
-         throw new BpmnError("400");
+         throw new BpmnError("409");
       }
 
       UserCourseRole enrollment = new UserCourseRole();
@@ -111,7 +93,13 @@ public class CourseServiceBpms {
       payment.setAmount(course.getPrice());
       payment.setCreatedAt(LocalDateTime.now());
       payment.setStatus(PaymentStatus.PROCESSING);
-
+      if (Math.random() < 0.5) {
+         log.info("Payment declined for user {} for course {}", user.getUsername(), course.getTitle());
+         payment.setStatus(PaymentStatus.FAILED);
+         payment.setCompletedAt(LocalDateTime.now());
+         paymentHistoryRepository.save(payment);
+         throw new BpmnError("402");
+      }
       payment.setStatus(PaymentStatus.SUCCESSFUL);
       payment.setCompletedAt(LocalDateTime.now());
       paymentHistoryRepository.save(payment);
