@@ -63,7 +63,7 @@
       </bpmn:endEvent>
       <bpmn:endEvent id="Event_0lf3ut1">
         <bpmn:incoming>Flow_0kk4n2x</bpmn:incoming>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_1kb0rzv" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1kb0rzv" errorRef="Error_1snk45f" />
       </bpmn:endEvent>
       <bpmn:endEvent id="Event_0fywbbl">
         <bpmn:incoming>Flow_0sp2vqq</bpmn:incoming>
