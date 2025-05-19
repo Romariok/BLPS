@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import itmo.blps.blps.dto.TaskScoreDTO;
 import itmo.blps.blps.dto.TaskSubmissionResponseDTO;
 import itmo.blps.blps.mapper.TaskMapper;
 import itmo.blps.blps.model.Permission;
