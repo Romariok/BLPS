@@ -144,13 +144,13 @@ public class TaskServiceBpms {
    public String getUnscoredSubmissions(Long teacherId, Long taskId) {
       Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new BpmnError(
-                  "404"));
+                  "500"));
 
       boolean isAssigned = userCourseRoleRepository.existsByUserIdAndCourseId(teacherId, task.getCourse().getId());
 
       if (!isAssigned) {
          throw new BpmnError(
-               "403");
+               "400");
       }
 
       return submissionRepository.findByTaskIdAndAutomaticallyGradedFalseAndGradedAtIsNull(taskId)

@@ -63,7 +63,7 @@
       </bpmn:endEvent>
       <bpmn:endEvent id="Event_0lf3ut1">
         <bpmn:incoming>Flow_0kk4n2x</bpmn:incoming>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_1kb0rzv" errorRef="Error_1rdjx80" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1kb0rzv" />
       </bpmn:endEvent>
       <bpmn:endEvent id="Event_0fywbbl">
         <bpmn:incoming>Flow_0sp2vqq</bpmn:incoming>
@@ -83,11 +83,11 @@
       </bpmn:serviceTask>
       <bpmn:boundaryEvent id="Event_0mtc2pz" name="invalid token" attachedToRef="Activity_0zu52d5">
         <bpmn:outgoing>Flow_0om6bl0</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ocbxdj" errorRef="Error_0abrnvz" camunda:errorMessageVariable="error_mes" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ocbxdj" errorRef="Error_12061rg" camunda:errorMessageVariable="error_mes" />
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_1rf2kpt" name="forbidden" attachedToRef="Activity_178kcr1">
         <bpmn:outgoing>Flow_0fh1rpi</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0o1g2cj" errorRef="Error_11p65cn" camunda:errorMessageVariable="error_mes" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0o1g2cj" errorRef="Error_19czwrh" camunda:errorMessageVariable="error_mes" />
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_09re1k1" name="task not found" attachedToRef="Activity_04feq56">
         <bpmn:outgoing>Flow_0kk4n2x</bpmn:outgoing>
@@ -107,10 +107,6 @@
       <bpmn:sequenceFlow id="Flow_0bo78ym" sourceRef="Activity_04feq56" targetRef="Activity_06ces5w" />
       <bpmn:sequenceFlow id="Flow_1h1h1zt" sourceRef="Activity_06ces5w" targetRef="Event_0mpsjga" />
     </bpmn:transaction>
-    <bpmn:boundaryEvent id="Event_1j2e4n7" name="error" attachedToRef="Activity_0hvw8jf">
-      <bpmn:outgoing>Flow_1b38rwo</bpmn:outgoing>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_1qy4nvt" camunda:errorMessageVariable="error_mes" />
-    </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_0ya0pin" sourceRef="Event_1v7ne68" targetRef="Activity_1uo9mdu" />
     <bpmn:sequenceFlow id="Flow_107ojw3" sourceRef="Activity_1uo9mdu" targetRef="Activity_0hvw8jf" />
     <bpmn:sequenceFlow id="Flow_1b38rwo" sourceRef="Event_1j2e4n7" targetRef="Activity_1s5b0kf" />
@@ -125,32 +121,32 @@
       <bpmn:incoming>Flow_0i0yedn</bpmn:incoming>
       <bpmn:outgoing>Flow_1b8sgg2</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0i0yedn" sourceRef="Activity_0nyf5wo" targetRef="Gateway_1er411u" />
+    <bpmn:sequenceFlow id="Flow_1b8sgg2" sourceRef="Gateway_1er411u" targetRef="Event_158xvge" />
+    <bpmn:boundaryEvent id="Event_1j2e4n7" name="error" attachedToRef="Activity_0hvw8jf">
+      <bpmn:outgoing>Flow_1b38rwo</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1qy4nvt" camunda:errorMessageVariable="error_mes" />
+    </bpmn:boundaryEvent>
     <bpmn:endEvent id="Event_158xvge">
       <bpmn:incoming>Flow_1b8sgg2</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0i0yedn" sourceRef="Activity_0nyf5wo" targetRef="Gateway_1er411u" />
-    <bpmn:sequenceFlow id="Flow_1b8sgg2" sourceRef="Gateway_1er411u" targetRef="Event_158xvge" />
   </bpmn:process>
   <bpmn:error id="Error_12061rg" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
   <bpmn:error id="Error_19czwrh" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
-  <bpmn:error id="Error_1rdjx80" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Task wasn&#39;t found" />
-  <bpmn:error id="Error_1wcjlag" name="NOT_ENROLLED" errorCode="403" camunda:errorMessage="User isn&#39;t enrolled for the course" />
-  <bpmn:error id="Error_0abrnvz" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
-  <bpmn:error id="Error_11p65cn" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
   <bpmn:error id="Error_1snk45f" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Task wasn&#39;t found" />
-  <bpmn:error id="Error_1w4aylk" name="NOT_ASSIGNED_TO_COURSE" errorCode="403" camunda:errorMessage="Teacher is not assigned to the course that contains this task" />
+  <bpmn:error id="Error_1w4aylk" name="NOT_ASSIGNED_TO_COURSE" errorCode="400" camunda:errorMessage="Teacher is not assigned to the course that contains this task" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_00scgip">
       <bpmndi:BPMNShape id="Participant_1naslp9_di" bpmnElement="Participant_1naslp9" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="1620" height="830" />
+        <dc:Bounds x="160" y="80" width="1340" height="830" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0cjriuo_di" bpmnElement="Lane_0cjriuo" isHorizontal="true">
-        <dc:Bounds x="190" y="80" width="1590" height="595" />
+        <dc:Bounds x="190" y="80" width="1310" height="595" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1jkkpkb_di" bpmnElement="Lane_1jkkpkb" isHorizontal="true">
-        <dc:Bounds x="190" y="675" width="1590" height="235" />
+        <dc:Bounds x="190" y="675" width="1310" height="235" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1v7ne68_di" bpmnElement="Event_1v7ne68">
@@ -172,18 +168,11 @@
           <dc:Bounds x="947" y="93" width="56" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1nwyapc_di" bpmnElement="Activity_0nyf5wo">
-        <dc:Bounds x="998" y="690" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1er411u_di" bpmnElement="Gateway_1er411u" isMarkerVisible="true">
-        <dc:Bounds x="1023" y="805" width="50" height="50" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_158xvge_di" bpmnElement="Event_158xvge">
-        <dc:Bounds x="1312" y="812" width="36" height="36" />
+        <dc:Bounds x="1352" y="812" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0hvw8jf_di" bpmnElement="Activity_0hvw8jf" isExpanded="true">
-        <dc:Bounds x="480" y="180" width="1200" height="410" />
+        <dc:Bounds x="480" y="180" width="990" height="410" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0zbcs0m_di" bpmnElement="Activity_0zu52d5">
         <dc:Bounds x="630" y="220" width="100" height="80" />
@@ -193,6 +182,24 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="521" y="285" width="79" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mpsjga_di" bpmnElement="Event_0mpsjga">
+        <dc:Bounds x="1352" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1345" y="285" width="51" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
+        <dc:Bounds x="1352" y="512" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mc7bqm_di" bpmnElement="Event_1pkielr">
+        <dc:Bounds x="1352" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
+        <dc:Bounds x="1352" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1o32x9t_di" bpmnElement="Event_0fywbbl">
+        <dc:Bounds x="1352" y="322" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1pxth9a_di" bpmnElement="Activity_178kcr1">
         <dc:Bounds x="830" y="220" width="100" height="80" />
@@ -204,24 +211,6 @@
       <bpmndi:BPMNShape id="BPMNShape_0gusfeu" bpmnElement="Activity_06ces5w">
         <dc:Bounds x="1200" y="220" width="100" height="80" />
         <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0mpsjga_di" bpmnElement="Event_0mpsjga">
-        <dc:Bounds x="1352" y="242" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1345" y="285" width="51" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1o32x9t_di" bpmnElement="Event_0fywbbl">
-        <dc:Bounds x="1352" y="322" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
-        <dc:Bounds x="1352" y="392" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0mc7bqm_di" bpmnElement="Event_1pkielr">
-        <dc:Bounds x="1352" y="452" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
-        <dc:Bounds x="1352" y="512" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0ctu0ww" bpmnElement="Event_1pthqef">
         <dc:Bounds x="1232" y="282" width="36" height="36" />
@@ -287,6 +276,13 @@
         <di:waypoint x="1300" y="260" />
         <di:waypoint x="1352" y="260" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1nwyapc_di" bpmnElement="Activity_0nyf5wo">
+        <dc:Bounds x="998" y="690" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1er411u_di" bpmnElement="Gateway_1er411u" isMarkerVisible="true">
+        <dc:Bounds x="1023" y="805" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1j2e4n7_di" bpmnElement="Event_1j2e4n7">
         <dc:Bounds x="542" y="572" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -322,7 +318,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1b8sgg2_di" bpmnElement="Flow_1b8sgg2">
         <di:waypoint x="1073" y="830" />
-        <di:waypoint x="1312" y="830" />
+        <di:waypoint x="1352" y="830" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="DataInputAssociation_1rb3g6t_di" bpmnElement="DataInputAssociation_1rb3g6t">
         <di:waypoint x="975" y="155" />
