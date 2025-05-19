@@ -83,11 +83,11 @@
       </bpmn:endEvent>
       <bpmn:boundaryEvent id="Event_0mtc2pz" name="invalid token" attachedToRef="Activity_0zu52d5">
         <bpmn:outgoing>Flow_0om6bl0</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ocbxdj" errorRef="Error_0abrnvz" camunda:errorMessageVariable="error_mes" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ocbxdj" camunda:errorMessageVariable="error_mes" />
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_1rf2kpt" name="forbidden" attachedToRef="Activity_178kcr1">
         <bpmn:outgoing>Flow_0fh1rpi</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0o1g2cj" errorRef="Error_11p65cn" camunda:errorMessageVariable="error_mes" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0o1g2cj" errorRef="Error_19czwrh" camunda:errorMessageVariable="error_mes" />
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_09re1k1" name="task not found" attachedToRef="Activity_04feq56">
         <bpmn:outgoing>Flow_0kk4n2x</bpmn:outgoing>
@@ -133,12 +133,8 @@
   </bpmn:process>
   <bpmn:error id="Error_12061rg" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
   <bpmn:error id="Error_19czwrh" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
-  <bpmn:error id="Error_0n0ytgi" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Course wasn&#39;t found" />
-  <bpmn:error id="Error_07fak0o" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Sertificate request wasn&#39;t found" />
-  <bpmn:error id="Error_0abrnvz" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
-  <bpmn:error id="Error_11p65cn" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
   <bpmn:error id="Error_1rdjx80" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Task wasn&#39;t found" />
-  <bpmn:error id="Error_1wcjlag" name="NOT_ENROLLED" errorCode="403" camunda:errorMessage="User isn&#39;t enrolled for the course" />
+  <bpmn:error id="Error_1wcjlag" name="NOT_ENROLLED" errorCode="400" camunda:errorMessage="User isn&#39;t enrolled for the course" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_02lliz0">
       <bpmndi:BPMNShape id="Participant_1naslp9_di" bpmnElement="Participant_1naslp9" isHorizontal="true">
@@ -172,16 +168,6 @@
           <dc:Bounds x="947" y="93" width="56" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1nwyapc_di" bpmnElement="Activity_0nyf5wo">
-        <dc:Bounds x="1100" y="690" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1er411u_di" bpmnElement="Gateway_1er411u" isMarkerVisible="true">
-        <dc:Bounds x="1125" y="805" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_158xvge_di" bpmnElement="Event_158xvge">
-        <dc:Bounds x="1312" y="812" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0hvw8jf_di" bpmnElement="Activity_0hvw8jf" isExpanded="true">
         <dc:Bounds x="480" y="180" width="950" height="410" />
       </bpmndi:BPMNShape>
@@ -201,27 +187,27 @@
         <dc:Bounds x="1000" y="220" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0gusfeu" bpmnElement="Activity_06ces5w">
-        <dc:Bounds x="1190" y="220" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0mpsjga_di" bpmnElement="Event_0mpsjga">
         <dc:Bounds x="1352" y="242" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1345" y="285" width="51" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1o32x9t_di" bpmnElement="Event_0fywbbl">
-        <dc:Bounds x="1352" y="322" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
-        <dc:Bounds x="1352" y="392" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
+        <dc:Bounds x="1352" y="512" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0mc7bqm_di" bpmnElement="Event_1pkielr">
         <dc:Bounds x="1352" y="452" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
-        <dc:Bounds x="1352" y="512" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
+        <dc:Bounds x="1352" y="392" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0gusfeu" bpmnElement="Activity_06ces5w">
+        <dc:Bounds x="1190" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1o32x9t_di" bpmnElement="Event_0fywbbl">
+        <dc:Bounds x="1352" y="322" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0ctu0ww" bpmnElement="Event_1pthqef">
         <dc:Bounds x="1222" y="282" width="36" height="36" />
@@ -287,6 +273,16 @@
         <di:waypoint x="1290" y="260" />
         <di:waypoint x="1352" y="260" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1nwyapc_di" bpmnElement="Activity_0nyf5wo">
+        <dc:Bounds x="1100" y="690" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1er411u_di" bpmnElement="Gateway_1er411u" isMarkerVisible="true">
+        <dc:Bounds x="1125" y="805" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_158xvge_di" bpmnElement="Event_158xvge">
+        <dc:Bounds x="1312" y="812" width="36" height="36" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1j2e4n7_di" bpmnElement="Event_1j2e4n7">
         <dc:Bounds x="542" y="572" width="36" height="36" />
         <bpmndi:BPMNLabel>

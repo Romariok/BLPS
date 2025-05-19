@@ -106,13 +106,13 @@ public class TaskServiceBpms {
    public String getStudentSubmissions(Long userId, Long taskId) {
       Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new BpmnError(
-                  "404"));
+                  "500"));
 
       boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
 
       if (!isEnrolled) {
          throw new BpmnError(
-               "403");
+               "400");
       }
 
       return submissionRepository.findByStudentIdAndTaskId(userId, taskId)
@@ -135,7 +135,7 @@ public class TaskServiceBpms {
 
       if (!isEnrolled) {
          throw new BpmnError(
-               "403");
+               "400");
       }
 
       return taskMapper.taskToTaskDTO(task).toString();
