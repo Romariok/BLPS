@@ -10,4 +10,14 @@ public class TaskDTO {
     private String description;
     private TaskType type;
     private Integer maxScore;
+
+    @Override
+    public String toString() {
+        return "Задание {" +
+                "название: " + title +
+                ", описание: " + description +
+                ", тип: " + type +
+                ", максимальная оценка: " + maxScore +
+                "}\n";
+    }
 }

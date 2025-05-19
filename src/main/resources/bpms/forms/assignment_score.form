@@ -1,0 +1,46 @@
+{
+  "components": [
+    {
+      "label": "Auth token",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0vrdaf3",
+        "columns": null
+      },
+      "id": "Field_1namfg1",
+      "key": "jwt_token",
+      "defaultValue": "0"
+    },
+    {
+      "label": "Assignment ID",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0rdstu1",
+        "columns": null
+      },
+      "id": "Field_13n28fw",
+      "key": "assignmentId",
+      "defaultValue": "0"
+    },
+    {
+      "label": "Score",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1gox31u",
+        "columns": null
+      },
+      "id": "Field_0oaowtt",
+      "key": "score",
+      "defaultValue": "0"
+    }
+  ],
+  "type": "default",
+  "id": "Form_AssignmentScore",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

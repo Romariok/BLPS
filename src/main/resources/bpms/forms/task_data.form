@@ -1,0 +1,31 @@
+{
+  "components": [
+    {
+      "text": "# Задание с ID - {{taskId}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_1j9ea3c",
+        "columns": null
+      },
+      "id": "Field_1e2ilqo"
+    },
+    {
+      "text": "# {{taskData}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_02prhqa",
+        "columns": null
+      },
+      "id": "Field_1kett43"
+    }
+  ],
+  "type": "default",
+  "id": "Form_TaskData",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

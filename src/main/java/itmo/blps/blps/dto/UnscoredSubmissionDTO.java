@@ -10,4 +10,15 @@ public class UnscoredSubmissionDTO {
     private String studentUsername;
     private String answer;
     private Integer maxScore;
+
+    @Override
+    public String toString() {
+        return "Отправленный ответ на задание {" +
+                "id=" + submissionId +
+                ", студент=" + studentId +
+                ", имя студента=" + studentUsername +
+                ", ответ=" + answer +
+                ", максимальная оценка=" + maxScore +
+                "}\n";
+    }
 }

@@ -1,0 +1,31 @@
+{
+  "components": [
+    {
+      "text": "# Результат отправки ответов на задание {{taskId}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_1b8y6my",
+        "columns": null
+      },
+      "id": "Field_02thriy"
+    },
+    {
+      "text": "{{taskSubmissionResult}}",
+      "type": "text",
+      "layout": {
+        "row": "Row_03j4a42",
+        "columns": null
+      },
+      "id": "Field_1dic06f"
+    }
+  ],
+  "type": "default",
+  "id": "Form_TaskSubmissionAfterStatus",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

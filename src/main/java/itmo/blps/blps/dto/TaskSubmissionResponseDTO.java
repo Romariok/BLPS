@@ -8,5 +8,16 @@ import lombok.Data;
 public class TaskSubmissionResponseDTO {
     private boolean success;
     private String message;
-    private Integer score; // Will be null for non-automatic tasks
+    private Integer score;
+
+    @Override
+    public String toString() {
+        if (score != null) {
+            return "Статус отправки решения: " +
+                    "сообщение: " + message +
+                    ", оценка: " + score + "\n";
+        }
+        return "Статус отправки решения: " +
+                "сообщение: " + message + "\n";
+    }
 }

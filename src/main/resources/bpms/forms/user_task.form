@@ -1,0 +1,37 @@
+{
+  "components": [
+    {
+      "label": "auth token",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_045wuq0",
+        "columns": null
+      },
+      "id": "Field_0l8wwtv",
+      "key": "jwt_token",
+      "description": "Enter your auth token here",
+      "defaultValue": "0"
+    },
+    {
+      "label": "Task id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_181c6d3",
+        "columns": null
+      },
+      "id": "Field_1r32z0d",
+      "key": "taskId",
+      "description": "Enter task id here",
+      "defaultValue": "0"
+    }
+  ],
+  "type": "default",
+  "id": "Form_UserTask",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}
