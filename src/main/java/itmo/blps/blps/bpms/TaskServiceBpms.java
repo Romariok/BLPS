@@ -205,24 +205,11 @@ public class TaskServiceBpms {
    public void scoreSubmission(Long teacherId, Long submissionId, Integer score) {
       TaskSubmission submission = submissionRepository.findById(submissionId)
             .orElseThrow(() -> new BpmnError(
-                  "404"));
+                  "500"));
 
       User teacher = userRepository.findById(teacherId)
             .orElseThrow(() -> new BpmnError(
-                  "403"));
-
-      if (teacher.getRole() != Role.TEACHER) {
-         throw new BpmnError(
-               "403");
-      }
-
-      boolean isAssigned = userCourseRoleRepository.existsByUserIdAndCourseId(teacherId,
-            submission.getTask().getCourse().getId());
-
-      if (!isAssigned) {
-         throw new BpmnError(
-               "403");
-      }
+                  "500"));
 
       if (score > submission.getTask().getMaxScore()) {
          throw new BpmnError(
