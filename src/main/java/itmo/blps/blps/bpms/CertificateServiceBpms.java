@@ -130,18 +130,16 @@ public class CertificateServiceBpms {
 
     public String processCertificateRequest(Boolean decision, Long requestId) {
         CertificateRequest request = certificateRequestRepository.findById(requestId)
-                .orElseThrow(() -> new BpmnError("404"));
-
-        if (request.getStatus() != itmo.blps.blps.model.CertificateRequestStatus.IN_PROGRESS) {
-            throw new BpmnError("400");
-        }
+                .orElseThrow(() -> new BpmnError("500"));
 
         request.setStatus(decision
                 ? itmo.blps.blps.model.CertificateRequestStatus.APPROVED
                 : itmo.blps.blps.model.CertificateRequestStatus.REJECTED);
 
         certificateRequestRepository.save(request);
-        requestCertificateGeneration(request.getStudent().getId(), request.getCourse().getId());
+        if (decision) {
+            requestCertificateGeneration(request.getStudent().getId(), request.getCourse().getId());
+        }
         return decision ? "Certificate request approved" : "Certificate request rejected";
     }
 }
