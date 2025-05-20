@@ -57,6 +57,7 @@ public class TaskServiceBpms {
    @SuppressWarnings("unchecked")
    public void checkSubmitTaskAuthority(DelegateExecution execution) {
       Set<String> authorities = (Set<String>) execution.getVariable("authorities");
+      log.info("Authorities: {}", authorities);
       if (authorities == null || !authorities.contains(Permission.SUBMIT_TASK.toString())) {
          throw new BpmnError("403");
       }
@@ -150,26 +151,18 @@ public class TaskServiceBpms {
             .collect(Collectors.toList()).toString();
    }
 
+   public boolean isEnrolled(Long userId, Long courseId) {
+      return !userCourseRoleRepository.existsByUserIdAndCourseId(userId, courseId);
+   }
+
    public String submitTask(Long userId, Long taskId, String answer) {
       Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new BpmnError(
-                  "403"));
+                  "500"));
 
       User student = userRepository.findById(userId)
             .orElseThrow(() -> new BpmnError(
-                  "403"));
-
-      boolean isEnrolled = userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
-
-      if (!isEnrolled) {
-         throw new BpmnError(
-               "403");
-      }
-
-      if (answer == null || answer.trim().isEmpty()) {
-         throw new BpmnError(
-               "400");
-      }
+                  "500"));
 
       TaskSubmission submission = new TaskSubmission();
       submission.setStudent(student);
