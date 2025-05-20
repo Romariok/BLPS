@@ -77,23 +77,14 @@ public class TaskServiceBpms {
    public void isValidSubmission(Long submissionId, Long teacherId) {
       TaskSubmission submission = submissionRepository.findById(submissionId)
             .orElseThrow(() -> new BpmnError(
-                  "404"));
-
-      User teacher = userRepository.findById(teacherId)
-            .orElseThrow(() -> new BpmnError(
-                  "403"));
-
-      if (teacher.getRole() != Role.TEACHER) {
-         throw new BpmnError(
-               "403");
-      }
+                  "500"));
 
       boolean isAssigned = userCourseRoleRepository.existsByUserIdAndCourseId(teacherId,
             submission.getTask().getCourse().getId());
 
       if (!isAssigned) {
          throw new BpmnError(
-               "403");
+               "409");
       }
    }
 
