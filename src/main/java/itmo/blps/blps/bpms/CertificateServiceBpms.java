@@ -32,8 +32,6 @@ public class CertificateServiceBpms {
     private CertificateRequestRepository certificateRequestRepository;
     @Autowired
     private CertificateMapper certificateMapper;
-    @Autowired
-    private JmsProducerService jmsProducerService;
 
     public void isExistingCourse(Long courseId) {
         if (!courseRepository.existsById(courseId)) {
@@ -121,13 +119,6 @@ public class CertificateServiceBpms {
         return request.getStatus().toString();
     }
 
-    public void requestCertificateGeneration(Long userId, Long courseId) {
-        CertificateRequestJmsDTO requestDto = new CertificateRequestJmsDTO();
-        requestDto.setUserId(userId);
-        requestDto.setCourseId(courseId);
-        jmsProducerService.sendMessage(requestDto);
-    }
-
     public String processCertificateRequest(Boolean decision, Long requestId) {
         CertificateRequest request = certificateRequestRepository.findById(requestId)
                 .orElseThrow(() -> new BpmnError("500"));
@@ -137,9 +128,6 @@ public class CertificateServiceBpms {
                 : itmo.blps.blps.model.CertificateRequestStatus.REJECTED);
 
         certificateRequestRepository.save(request);
-        if (decision) {
-            requestCertificateGeneration(request.getStudent().getId(), request.getCourse().getId());
-        }
         return decision ? "Certificate request approved" : "Certificate request rejected";
     }
 }
