@@ -44,7 +44,7 @@ public class CertificateServiceBpms {
 
     public void isExistingRequest(Long courseId, Long userId) {
         if (!certificateRequestRepository.existsByStudentIdAndCourseId(userId, courseId)) {
-            throw new BpmnError("404");
+            throw new BpmnError("400");
         }
     }
 

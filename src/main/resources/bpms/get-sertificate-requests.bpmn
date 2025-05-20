@@ -13,9 +13,9 @@
         <bpmn:flowNodeRef>Event_1v7ne68</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1uo9mdu</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1s5b0kf</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_158xvge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0nyf5wo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_1er411u</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_158xvge</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="Event_1v7ne68" name="wants to see pending certificate requests">
@@ -79,15 +79,15 @@
       </bpmn:endEvent>
       <bpmn:boundaryEvent id="Event_0mtc2pz" name="invalid token" attachedToRef="Activity_0zu52d5">
         <bpmn:outgoing>Flow_0om6bl0</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ocbxdj" errorRef="Error_0abrnvz" camunda:errorMessageVariable="error_mes" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0ocbxdj" errorRef="Error_12061rg" camunda:errorMessageVariable="error_mes" />
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_1rf2kpt" name="forbidden" attachedToRef="Activity_178kcr1">
         <bpmn:outgoing>Flow_0fh1rpi</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_0o1g2cj" errorRef="Error_11p65cn" camunda:errorMessageVariable="error_mes" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0o1g2cj" errorRef="Error_19czwrh" camunda:errorMessageVariable="error_mes" />
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="Event_09re1k1" name="course not found" attachedToRef="Activity_04feq56">
         <bpmn:outgoing>Flow_0kk4n2x</bpmn:outgoing>
-        <bpmn:errorEventDefinition id="ErrorEventDefinition_1wl72wd" errorRef="Error_07fak0o" camunda:errorMessageVariable="error_mes" />
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_1wl72wd" errorRef="Error_0n0ytgi" camunda:errorMessageVariable="error_mes" />
       </bpmn:boundaryEvent>
       <bpmn:sequenceFlow id="Flow_0zi6ykg" sourceRef="Event_0id09my" targetRef="Activity_0zu52d5" />
       <bpmn:sequenceFlow id="Flow_03popum" sourceRef="Activity_0zu52d5" targetRef="Activity_178kcr1" />
@@ -107,9 +107,6 @@
       <bpmn:outgoing>Flow_1b38rwo</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1qy4nvt" camunda:errorMessageVariable="error_mes" />
     </bpmn:boundaryEvent>
-    <bpmn:endEvent id="Event_158xvge">
-      <bpmn:incoming>Flow_1b8sgg2</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:userTask id="Activity_0nyf5wo" name="show list to user" camunda:formRef="Form_PendingRequests" camunda:formRefBinding="latest">
       <bpmn:incoming>Flow_1kyvj1i</bpmn:incoming>
       <bpmn:outgoing>Flow_06mbs99</bpmn:outgoing>
@@ -121,14 +118,14 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1b8sgg2" sourceRef="Gateway_1er411u" targetRef="Event_158xvge" />
     <bpmn:sequenceFlow id="Flow_06mbs99" sourceRef="Activity_0nyf5wo" targetRef="Gateway_1er411u" />
+    <bpmn:endEvent id="Event_158xvge">
+      <bpmn:incoming>Flow_1b8sgg2</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:error id="Error_1vg3xif" name="BAD REQUEST" errorCode="400" camunda:errorMessage="You didn&#39;t complete enough tasks to acquire certificate" />
   <bpmn:error id="Error_12061rg" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
   <bpmn:error id="Error_19czwrh" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
   <bpmn:error id="Error_0n0ytgi" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Course wasn&#39;t found" />
-  <bpmn:error id="Error_0abrnvz" name="UNAUTHORIZED" errorCode="401" camunda:errorMessage="Your auth token is invalid" />
-  <bpmn:error id="Error_11p65cn" name="FORBIDDEN" errorCode="403" camunda:errorMessage="You don&#39;t have access" />
-  <bpmn:error id="Error_07fak0o" name="NOT_FOUND" errorCode="404" camunda:errorMessage="Course wasn&#39;t found" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0l4jj04">
       <bpmndi:BPMNShape id="Participant_1naslp9_di" bpmnElement="Participant_1naslp9" isHorizontal="true">
@@ -163,14 +160,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_158xvge_di" bpmnElement="Event_158xvge">
-        <dc:Bounds x="1162" y="772" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1nwyapc_di" bpmnElement="Activity_0nyf5wo">
-        <dc:Bounds x="930" y="650" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1er411u_di" bpmnElement="Gateway_1er411u" isMarkerVisible="true">
-        <dc:Bounds x="955" y="765" width="50" height="50" />
+        <dc:Bounds x="1242" y="772" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0hvw8jf_di" bpmnElement="Activity_0hvw8jf" isExpanded="true">
         <dc:Bounds x="452" y="160" width="878" height="390" />
@@ -201,14 +191,14 @@
           <dc:Bounds x="1235" y="255" width="51" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
-        <dc:Bounds x="1242" y="352" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
+        <dc:Bounds x="1242" y="472" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0mc7bqm_di" bpmnElement="Event_1pkielr">
         <dc:Bounds x="1242" y="412" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1rxvxba_di" bpmnElement="Event_12glwyy">
-        <dc:Bounds x="1242" y="472" width="36" height="36" />
+      <bpmndi:BPMNShape id="Event_10w22my_di" bpmnElement="Event_0lf3ut1">
+        <dc:Bounds x="1242" y="352" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_09re1k1_di" bpmnElement="Event_09re1k1">
         <dc:Bounds x="934" y="252" width="36" height="36" />
@@ -263,6 +253,13 @@
         <di:waypoint x="1200" y="230" />
         <di:waypoint x="1242" y="230" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1nwyapc_di" bpmnElement="Activity_0nyf5wo">
+        <dc:Bounds x="930" y="650" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1er411u_di" bpmnElement="Gateway_1er411u" isMarkerVisible="true">
+        <dc:Bounds x="955" y="765" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1j2e4n7_di" bpmnElement="Event_1j2e4n7">
         <dc:Bounds x="514" y="532" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -294,7 +291,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1b8sgg2_di" bpmnElement="Flow_1b8sgg2">
         <di:waypoint x="1005" y="790" />
-        <di:waypoint x="1162" y="790" />
+        <di:waypoint x="1242" y="790" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_06mbs99_di" bpmnElement="Flow_06mbs99">
         <di:waypoint x="980" y="730" />

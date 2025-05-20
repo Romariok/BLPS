@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import itmo.blps.blps.dto.TaskSubmissionResponseDTO;
 import itmo.blps.blps.mapper.TaskMapper;
 import itmo.blps.blps.model.Permission;
-import itmo.blps.blps.model.Role;
 import itmo.blps.blps.model.Task;
 import itmo.blps.blps.model.TaskSubmission;
 import itmo.blps.blps.model.TaskType;
@@ -151,8 +150,11 @@ public class TaskServiceBpms {
             .collect(Collectors.toList()).toString();
    }
 
-   public boolean isEnrolled(Long userId, Long courseId) {
-      return !userCourseRoleRepository.existsByUserIdAndCourseId(userId, courseId);
+   public boolean isEnrolled(Long userId, Long taskId) {
+      Task task = taskRepository.findById(taskId)
+            .orElseThrow(() -> new BpmnError(
+                  "500"));
+      return userCourseRoleRepository.existsByUserIdAndCourseId(userId, task.getCourse().getId());
    }
 
    public String submitTask(Long userId, Long taskId, String answer) {
