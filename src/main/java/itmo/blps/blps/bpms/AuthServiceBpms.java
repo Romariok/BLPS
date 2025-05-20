@@ -13,6 +13,7 @@ import itmo.blps.blps.service.AuthService;
 public class AuthServiceBpms {
     @Autowired
     AuthService authService;
+
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public String auth(String username, String password) {
         try {

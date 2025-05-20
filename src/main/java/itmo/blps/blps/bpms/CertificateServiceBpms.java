@@ -35,7 +35,6 @@ public class CertificateServiceBpms {
     @Autowired
     private JmsProducerService jmsProducerService;
 
-
     public void isExistingCourse(Long courseId) {
         if (!courseRepository.existsById(courseId)) {
             throw new BpmnError("404");
@@ -55,7 +54,8 @@ public class CertificateServiceBpms {
     }
 
     public void isRequestInProgress(Long requestId) {
-        if (certificateRequestRepository.findById(requestId).get().getStatus() != itmo.blps.blps.model.CertificateRequestStatus.IN_PROGRESS) {
+        if (certificateRequestRepository.findById(requestId).get()
+                .getStatus() != itmo.blps.blps.model.CertificateRequestStatus.IN_PROGRESS) {
             throw new BpmnError("400");
         }
     }
@@ -108,10 +108,10 @@ public class CertificateServiceBpms {
 
     public String getPendingRequests(Long courseId) {
         return certificateRequestRepository
-                        .findByCourseIdAndStatus(courseId, itmo.blps.blps.model.CertificateRequestStatus.IN_PROGRESS)
-                        .stream()
-                        .map(certificateMapper::toCertificateRequestListDTO)
-                        .collect(Collectors.toList()).toString();
+                .findByCourseIdAndStatus(courseId, itmo.blps.blps.model.CertificateRequestStatus.IN_PROGRESS)
+                .stream()
+                .map(certificateMapper::toCertificateRequestListDTO)
+                .collect(Collectors.toList()).toString();
     }
 
     public String checkRequestStatus(Long userId, Long courseId) {
@@ -130,18 +130,18 @@ public class CertificateServiceBpms {
 
     public String processCertificateRequest(Boolean decision, Long requestId) {
         CertificateRequest request = certificateRequestRepository.findById(requestId)
-                        .orElseThrow(() -> new BpmnError("404"));
+                .orElseThrow(() -> new BpmnError("404"));
 
         if (request.getStatus() != itmo.blps.blps.model.CertificateRequestStatus.IN_PROGRESS) {
-                throw new BpmnError("400");
+            throw new BpmnError("400");
         }
 
         request.setStatus(decision
-                        ? itmo.blps.blps.model.CertificateRequestStatus.APPROVED
-                        : itmo.blps.blps.model.CertificateRequestStatus.REJECTED);
+                ? itmo.blps.blps.model.CertificateRequestStatus.APPROVED
+                : itmo.blps.blps.model.CertificateRequestStatus.REJECTED);
 
         certificateRequestRepository.save(request);
-        requestCertificateGeneration(request.getStudent().getId(),request.getCourse().getId());
+        requestCertificateGeneration(request.getStudent().getId(), request.getCourse().getId());
         return decision ? "Certificate request approved" : "Certificate request rejected";
-}
+    }
 }
