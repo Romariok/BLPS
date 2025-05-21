@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login", "/camunda/**", "/identity/**").permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login", "/camunda/**", "/identity/**", "/rest/**", "/engine-rest/**").permitAll()
                         // Course-related endpoints with permission checks
                         .requestMatchers("/api/courses/new").hasAuthority(Permission.CREATE_COURSE.name())
                         .requestMatchers("/api/courses/*/edit").hasAuthority(Permission.EDIT_COURSE.name())
