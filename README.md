@@ -1,6 +1,6 @@
-# BLPS Project with JAAS Security
+# Security project
 
-This project implements Java Authentication and Authorization Service (JAAS) to provide advanced security features.
+This project implements Java Authentication and Authorization Service to provide advanced security features.
 
 ## Security Architecture
 
